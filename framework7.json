@@ -1,0 +1,19 @@
+{
+  "cwd": "C:\\Users\\Andre\\playum\\qrcode",
+  "type": [
+    "pwa"
+  ],
+  "name": "Qr Code",
+  "framework": "core",
+  "template": "single-view",
+  "bundler": false,
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkTheme": false,
+    "iconFonts": true,
+    "fillBars": false
+  },
+  "customBuild": false
+}

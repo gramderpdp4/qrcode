@@ -1,0 +1,95 @@
+<div class="page" data-name="jantar" data-url="/cart" data-browser-history="true">
+  <div class="navbar" style="height: 7vh;">
+      <div class="navbar-bg" style="background-color: #212121; color: white;"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a class="link back">
+              <i class="f7-icons" style="color: white;">chevron_left</i>
+          </a>
+        </div>
+        <div class="title" style="color:white !important; font-size: 3.8vw; font-weight: bold;">Meu carrinho</div>
+        <div class="right">
+          <a class="link popover-open" href="#" data-popover=".popover-about"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+          </a>
+        </div>
+        <div id="popover-options" class="popover popover-about" data-backdrop="false" style="background-color: #2e2e2e; color: white;">
+          <div class="popover-inner">
+            <div class="list">
+              <ul>
+                <li>
+                  <div class="item-content">
+                    <div class="item-media"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white;"><path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm1.5 1H8c-3.309 0-6 2.691-6 6v1h15v-1c0-3.309-2.691-6-6-6z"></path><path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path></svg></div>
+                    <div class="item-inner" style="margin-left: 0;">
+                      <div class="item-title">Carrinho compartilhado</div>
+                      <div class="item-after">
+                        <label class="toggle toggle-init">
+                          <input type="checkbox" id="share_cart_popover" onchange="shareCart(this)"/>
+                          <span class="toggle-icon"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <a class="item-content item-link" data-transition="f7-cover" href="/changedMesa/">
+                    <div class="item-media"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M19.924 10.383a1 1 0 0 0-.217-1.09l-5-5-1.414 1.414L16.586 9H4v2h15a1 1 0 0 0 .924-.617zM4.076 13.617a1 1 0 0 0 .217 1.09l5 5 1.414-1.414L7.414 15H20v-2H5a.999.999 0 0 0-.924.617z"></path></svg></div>
+                    <div class="item-inner" style="margin-left: 0;">
+                      <div class="item-title">Mudar mesa</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a id="cupom__app__cart" class="item-content item-link">
+                    <div class="item-media"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M16 3H8c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h8c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zM2 7v10c0 1.103.897 2 2 2V5c-1.103 0-2 .897-2 2zm18-2v14c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2z"></path></svg></div>
+                    <div class="item-inner" style="margin-left: 0;">
+                      <div class="item-title">Cupom de desconto</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="page-content" id="jantarConfirm" style="padding-top: 0;">
+<div class="container__style">
+<div class="container">
+  <table style="position: relative; top: 10vh; color: white !important; display: none" id="table_cart">
+    <thead>
+      <tr>
+        <th style="left: 3vw;
+          position: relative;">Nome</th>
+        <th class="label-cell" style="position: relative; left: 8vw">Preço</th>
+        <th class="numeric-cell" style="position: relative; left: 23vw;">Quantidade</th>
+      </tr>
+    </thead>
+    <tbody id="items_table">
+      
+    </tbody>
+  </table>
+  <div id="cartContainer" class="container-mt">
+    <div class="preloader color-green" style="display: flex; margin-left: auto;margin-right: auto; top: 10vh;"></div>
+
+  </div>
+  <div class="price__container">
+    <p id="price__totality" style="color: white;
+    position: relative;
+    top: 15vh;
+    text-align: center;
+    width: 30vw;
+    padding: 0.6rem 0;
+    left: 60vw;
+    background-color: #2E2E2E;
+    box-shadow: rgb(2 2 2 / 25%) 0px 13px 27px -5px, rgb(0 0 0 / 30%) 0px 8px 16px -8px;
+    "></p>
+  </div>
+  <div id="message_payment"></div>
+  <div id="payment_pending"></div>
+<a href="/payment/" style="position: absolute; bottom: 2em; display: none; background-color: var(--p1-bg-color-principal); color: black; font-weight: bold;" data-transition="f7-cover" data-tip="Use this data-tip attribute to store your tool tip message." class="tool button button-fill button-large w-91 mt-5" id="btn-payment">Finalizar pedido</a>
+<div id="container-button-finishe"></div>
+</div>
+</div>
+  </div>
+</div>
+

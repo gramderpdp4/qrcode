@@ -1,0 +1,37 @@
+{
+  "name": "qr-code",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Qr Code",
+  "repository": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "http-server ./www/ -o -c 1 -a localhost -p 3100",
+    "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./www/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./www/fonts/ && cpy --flat ./node_modules/framework7/*.js ./www/framework7 && cpy --flat ./node_modules/framework7/*.css ./www/framework7 && cpy --flat ./node_modules/framework7/*.map ./www/framework7"
+  },
+  "browserslist": [
+    "IOS >= 13",
+    "Safari >= 13",
+    "last 5 Chrome versions",
+    "last 5 Firefox versions",
+    "Samsung >= 12"
+  ],
+  "dependencies": {
+    "dom7": "^4.0.4",
+    "express": "^4.18.1",
+    "firebase-admin": "^10.1.0",
+    "firebase-functions": "^3.20.1",
+    "framework7": "^7.0.2",
+    "framework7-icons": "^5.0.5",
+    "helmet": "^5.0.2",
+    "material-icons": "^1.10.10",
+    "moment-timezone": "^0.5.34",
+    "skeleton-elements": "^4.0.0",
+    "swiper": "^8.1.4"
+  },
+  "devDependencies": {
+    "cpy-cli": "^4.1.0",
+    "http-server": "^14.1.0"
+  }
+}

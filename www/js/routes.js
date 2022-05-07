@@ -1,0 +1,442 @@
+
+var routes = [
+  {
+    path: '/',
+    url: './index.html'
+  },
+  {
+    path: '/about/',
+    url: './pages/about.html',
+  },
+  {
+    path: '/search/',
+    url: './pages/search.html',
+    transition: "f7-p1",
+    on: {
+        pageInit: function(){
+      
+            initSearch()
+            returnAllItems()
+
+            let $search = $("#searchP1"), $message_text = $("#message_text");
+
+            $search.keyup(function(){
+ 
+              var filter = $(this).val(), count = 0, $length = $(this).val();
+              $(".item-search-children").each(function(){
+  
+                  if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                      $(this).
+                      css({
+                        visibility: "hidden",
+                        opacity: "0"
+                      })
+                      .hide();
+
+                      if($(this).hasClass("hidden-search-all-items")){
+                        $(this).removeClass("hidden-search-all-items")
+                      }
+
+
+                      $message_text.css({
+                        display: "none",
+                        visibility: "hidden"
+                      })
+                  }else if($length.length == ""){
+                    $(this).
+                    css({
+                      visibility: "hidden",
+                      opacity: "0"
+                    })
+                    .hide();
+                  }else{
+                    $message_text.css({
+                      display: "none",
+                      visibility: "hidden"
+                    })
+                    $(this)
+                    .css({
+                      visibility: "visible",
+                      opacity: "1",
+                      pointerEvents: "auto"
+                    })
+                    .show()
+                    .addClass("hidden-search-all-items")
+
+                    count++;
+
+                  }
+
+              
+              });
+              
+          });
+        },
+        pageAfterIn: function(){
+          app.searchbar.enable()
+        }
+ 
+    }
+  },
+  {
+    path: '/account/',
+    url: './pages/my-account.html',
+    on: {
+      pageInit: function(){
+        let $name_user_acc = sessionStorage.getItem("user_name_login"),
+            $container_name_text = document.getElementById("name_user_acc");
+
+            $container_name_text.innerText = $name_user_acc
+      }
+    }
+  },
+  {
+    path: '/changedMesa/',
+    url: './pages/changed-chair.html',
+    on: {
+      pageInit: function(){
+        app.popover.close(".popover")
+        returnChairsLength()
+      }
+    } 
+  },
+  {
+    path: '/coments/',
+    sheet: {
+      backdrop: false,
+      backdropEl: false,
+      async: function({ router, to, resolve }) {
+          // App instance
+          var app = router.app;
+
+          var alimentos = to.params.alimentos;
+          var bebidas = to.params.bebidas;
+          var codigo = to.params.codigo;
+
+          // We got user data from request
+          var user = {
+
+              bebidas: bebidas,
+              alimentos: alimentos,
+              codigo: codigo,
+              links: [{
+                      title: 'Framework7 Website',
+                      url: 'http://framework7.io',
+                  },
+                  {
+                      title: 'Framework7 Forum',
+                      url: 'http://forum.framework7.io',
+                  },
+              ]
+          };
+          // Hide Preloader
+          app.preloader.hide();
+
+          // Resolve route to load page
+          resolve({
+                  componentUrl: './pages/sheet-coments.html',
+              }, {
+                  props: {
+                      user: user,
+                  }
+              },
+
+          );
+
+      },
+      on: {
+        opened: function(){
+          returnComments()
+        }
+      },
+  },
+  },
+  {
+    path: '/favoritos/',
+    componentUrl: './pages/favoritos.html',
+    on: {
+      pageInit: function(){
+        returnFavorites()
+      }
+    }
+  },
+  {
+    path: '/metod/',
+    url: './pages/metod-payment.html',
+    on: {
+      pageInit: function(){
+        VerifiShareCart()
+      },
+      pageBeforeOut: function(){
+        let $ref_delete_payment_pending = databases.ref("/paymentPending/")
+        .orderByChild("keyUserPayment")
+        .equalTo($user_key_global)
+
+        $ref_delete_payment_pending.once("value", sm , nm)
+
+        function sm(data) {
+         let $items = data.val(),
+             $keys = Object.keys($items)
+
+             for(let i = 0; i < $keys.length; i++){
+               let $key = $keys[i];
+
+               let $remove_pending = databases.ref("/paymentPending/" + $key)
+
+               $remove_pending.remove()
+             }
+        }
+
+        function nm(err) {
+          
+        }
+      }
+    }
+  },
+  {
+    path: '/finished/',
+    url: './pages/finished.html'
+  },
+  {
+    path: '/notificacoes/',
+    componentUrl: './pages/notificacoes.html',
+    on: {
+      pageInit: function(){
+        returnMessages()
+      }
+    }
+  },
+  {
+    path: '/user-page/',
+    url: './pages/user-page.html',
+    on: {
+      pageInit: function(){
+        let $mesa = sessionStorage.getItem("mkep1"),
+            $name_user = sessionStorage.getItem("user_name_login"),
+            $container_name = document.getElementById("name_user"),
+            $mesa__container = document.getElementById("mesa__atual");
+
+            $mesa__container.innerText = "Mesa atual " + $mesa
+            $container_name.innerText = $name_user
+      }
+    }
+  },
+  {
+    path: "/music/",
+    url: "./pages/music.html",
+    on: {
+      pageInit: function(){
+        let $music__container = document.getElementById("music")
+        $music__container.classList.add("rotate-scale-up")
+        setTimeout(() => {
+         $menu_cart.style.display = "none"
+        }, 100);
+        returnMusic()
+      },
+      pageBeforeout: function(){
+        let $music__container = document.getElementById("music")
+        $music__container.classList.remove("rotate-scale-up")
+      }
+    }
+  },
+  {
+    path: '/sheet-cupom/',
+    sheet: {
+      url: './pages/sheet-cupom.html',
+      on: {
+        open: function(){
+          let button = document.getElementById("verified_cupom"),
+              cod__cupom = document.getElementById("cod__cupom");
+
+          button.addEventListener("click", function(){
+            returnCupom(cod__cupom.value)
+          })
+
+          app.popover.close(".popover")
+        }
+      }
+    }
+  },
+  {
+    path: '/sheet-cupom-active/',
+    sheet: {
+      url: './pages/sheet-cupom-active.html',
+
+    }
+  },
+  {
+    path: '/form/',
+    url: './pages/form.html',
+  },
+  {
+    path: '/itemPage/nome/:nome/description/:description/image/:image/price/:price/key/:key',
+    async: function ({ router, to, resolve }) {
+      var app = router.app;
+
+      var nome = to.params.nome,
+      description = to.params.description,
+      image = to.params.image,
+      key = to.params.key,
+      price = to.params.price;
+        var user = {
+          description: description,
+          nome: nome,
+          key: key,
+          price: price,
+          image: image,
+          firstName: 'Vladimir',
+          lastName: 'Kharlampidi',
+          about: 'Hello, i am creator of Framework7! Hope you like it!',
+          links: [
+            {
+              title: 'Framework7 Website',
+              url: 'http://framework7.io',
+            },
+            {
+              title: 'Framework7 Forum',
+              url: 'http://forum.framework7.io',
+            },
+          ]
+        };
+        // Hide Preloader
+        app.preloader.hide();
+
+        // Resolve route to load page
+        resolve(
+          {
+            componentUrl: './pages/item-page.html',
+          },
+          {
+            props: {
+              user: user,
+            }
+          }
+        );
+    },
+  },
+  { 
+    path: '/right-panel-ajax/',
+    panel: {
+      url: './pages/filtered.html',
+      on: {
+        open: function(){
+          app.range.create({
+            el: '.range-slider',
+            min:0,
+            max:100,
+            value:50,
+            label:true,
+            labelText:'my label',
+            formatLabel:function(v){
+              return this.params.labelText+' '+v;
+            }
+          });
+        }
+      }
+    },
+  },
+  {
+    path:  '/cart/',
+    url: './pages/cart.html',
+    on: {
+      pageInit: function(){
+        returnCartItems()
+        $("#popover-options").on("popover:open", function(){
+          
+            let $input_share = document.getElementById("share_cart_popover"),
+                $session_share = sessionStorage.getItem("cartShare");
+          
+            if($session_share == "sim"){
+              $input_share.checked = true
+            }else{
+              $input_share.checked = false
+            }
+          
+          })          
+          
+            returnPaymentProcessResults()
+      },
+
+      pageBeforeOut: function(){
+        app.toast.close(".toast")
+        $("#oneButton").click()
+      }
+    }
+  },
+  {
+    path: '/paymentPending/',
+    url: './pages/paymentPending.html',
+    transition: 'f7-cover',
+    on: {
+      pageInit: function(){
+        returnPaymentProcessResults()
+      }
+    }
+  },
+  {
+    path: '/payment/',
+    url: './pages/payment.html',
+    on: {
+      pageInit: function(){
+        VerifiItemsCartAcct()
+      }
+    }
+  },
+  {
+    path: '/dynamic-route/blog/:blogId/post/:postId/',
+    componentUrl: './pages/dynamic-route.html',
+  },
+  {
+    path: '/request-and-load/user/:userId/',
+    async: function ({ router, to, resolve }) {
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // User ID from request
+      var userId = to.params.userId;
+
+      // Simulate Ajax Request
+      setTimeout(function () {
+        // We got user data from request
+        var user = {
+          firstName: 'Vladimir',
+          lastName: 'Kharlampidi',
+          about: 'Hello, i am creator of Framework7! Hope you like it!',
+          links: [
+            {
+              title: 'Framework7 Website',
+              url: 'http://framework7.io',
+            },
+            {
+              title: 'Framework7 Forum',
+              url: 'http://forum.framework7.io',
+            },
+          ]
+        };
+        // Hide Preloader
+        app.preloader.hide();
+
+        // Resolve route to load page
+        resolve(
+          {
+            componentUrl: './pages/request-and-load.html',
+          },
+          {
+            props: {
+              user: user,
+            }
+          }
+        );
+      }, 1000);
+    },
+  },
+  // Default route (404 page). MUST BE THE LAST
+  {
+    path: '(.*)',
+    url: './pages/404.html',
+  },
+];
+

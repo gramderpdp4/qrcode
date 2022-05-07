@@ -1,0 +1,80 @@
+<template>
+    <div class="page">
+        <div class="navbar" style="height: 7vh;">
+            <div class="navbar-bg" style="background-color: #212121; color: white;"></div>
+            <div class="navbar-inner sliding">
+              <div class="left">
+                <a class="link back">
+                    <i class="f7-icons" style="color: white;">chevron_left</i>
+                </a>
+              </div>
+              <div class="title" style="color:white !important; font-size: 3.8vw; font-weight: bold;">Mensagens</div>
+            </div>
+          </div>
+      <div class="page-content" style="background-color: #212121;">
+        <div class="container">
+          <div id="container_messages"></div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    export default function (props, {$f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      // Component Data
+      let name = 'Jimmy';
+      let age = 25;
+      let likes = ['Tennis', 'Chess', 'Football'];
+  
+      let param = props.user
+  
+      // Component Methods
+      const openAlert = () => {
+        $f7.dialog.alert('Hello World');
+      }
+  
+      // Lifecycle
+      $onBeforeMount(() => {
+        console.log('onBeforeMount');
+      });
+      $onMounted(() => {
+      });
+      $onBeforeUnmount(() => {
+        console.log('onBeforeUnmount');
+      });
+      $onUnmounted(() => {
+        console.log('onUnmounted');
+      });
+  
+      // Page Events
+      $on('pageMounted', (e, page) => {
+        console.log('pageMounted', page);
+      });
+      $on('pageInit', (e, page) => {
+        console.log('pageInit', page);
+      });
+      $on('pageBeforeIn', (e, page) => {
+        console.log('pageBeforeIn', page);
+      });
+      $on('pageAfterIn', (e, page) => {
+        console.log('pageAfterIn', page);
+      });
+      $on('pageBeforeOut', (e, page) => {
+        console.log('pageBeforeOut', page);
+      });
+      $on('pageAfterOut', (e, page) => {
+        console.log('pageAfterOut', page);
+      });
+      $on('pageBeforeRemove', (e, page) => {
+        console.log('pageBeforeRemove', page);
+      });
+  
+      // Return render function
+      return $render;
+    }
+  </script>
+  
