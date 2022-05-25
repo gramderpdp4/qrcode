@@ -1,0 +1,173 @@
+<template>
+    <div class="page" data-name="item" data-url="/item-page" data-browser-history="true">
+        <div class="navbar" style="height: 7vh;">
+            <div class="navbar-bg" style="background-color: rgba(0, 0, 0, 0.6);; color: white;"></div>
+            <div class="navbar-inner sliding">
+              <div class="left">
+                <a class="link back">
+                    <i class="f7-icons" style="color: white;">chevron_left</i>
+                </a>
+              </div>
+              <div class="title" style="color:white !important; font-size: 3.8vw; font-weight: bold;"></div>
+              <a class="right ripple" href="/cart/" data-transition="f7-cover">
+                <svg class="f7-icons" viewBox="0 0 24 24" style="fill: white; margin-right: 3vw;"><path d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"></path><circle cx="10.5" cy="19.5" r="1.5"></circle><circle cx="17.5" cy="19.5" r="1.5"></circle></svg>
+              </a>
+            </div>
+          </div>
+        <div class="page-content" id="jantarConfirm" style="padding-top: 0;">
+            <div class="container__style">
+                <div class="container-item">
+                  
+                </div>
+            </div>
+        </div>         
+    </div>
+    </template>
+    <script>
+      export default (props, {$f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) => {
+        const details = props.details;
+
+        $on('pageInit', (e, page) => {
+
+            const db = firebase.database();
+
+            const RefItem = db.ref("/restaurants/" + KeyRestaurant + "/categories/" + details.keycategory + "/menu/" + details.key),
+            ContainerItem = document.querySelector(".container-item");
+            
+            RefItem.on("value", (data) => {
+                const image = data.val().image,
+                name = data.val().name,
+                description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+                stars = data.val().stars;
+
+                const Img = document.createElement("img"),
+                ContainerBottom = document.createElement("div"),
+                Container = document.createElement("div"),
+                ContainerFixed = document.createElement("div"),
+                ButtonAddCart = document.createElement("button"),
+                RowStart = document.createElement("div"),
+                RowHeader = document.createElement("div"),
+                ColHeader = document.createElement("div"),
+                ColHeader2 = document.createElement("div"),
+                ButtonAddComment = document.createElement("button"),
+                ContainerDescription = document.createElement("h5"),
+                h6 = document.createElement("h6");
+
+                LZMA.decompress(image, function on_decompress_complete(result) {
+                Img.src = result
+                }, function on_decompress_progress_update(percent) {
+                
+                });
+
+                Img.style.mixBlendMode = "revert"
+                Img.style.width = "100%"
+                h6.innerText = name
+                h6.style.marginTop = "2.1rem"
+                ContainerDescription.innerText = description
+                ContainerDescription.style.marginTop = "3.5rem"
+                ContainerDescription.style.fontSize = "0.9rem"
+                ContainerDescription.style.fontWeight = "500"
+                ButtonAddCart.textContent = "Adicionar ao carrinho"
+                RowStart.style.maxWidth = "30%"
+                ColHeader2.style.position = "absolute"
+                ColHeader2.style.right = "0.5rem"
+                ColHeader.style.marginTop = "-1.5rem"
+                ButtonAddComment.style.marginTop = "0.4rem"
+                ButtonAddComment.style.width = "50%"
+                ButtonAddComment.style.float = "right"
+
+                ButtonAddComment.innerHTML = `
+                <span class="material-symbols-outlined">
+                mode_comment
+                </span>
+                `
+                RowHeader.classList.add("row")
+                ColHeader.classList.add("col-75")
+                ColHeader2.classList.add("col-25")
+                ContainerBottom.classList.add("container-bottom-item")
+                ButtonAddCart.classList.add("button", "button-fill")
+                h6.classList.add("text-item-menu")
+                Container.classList.add("container")
+                ContainerFixed.classList.add("container-fixed")
+                RowStart.classList.add("row")
+                ButtonAddComment.classList.add("button")
+
+                RowStart.id = "row-stars"
+
+                ColHeader2.appendChild(ButtonAddComment)
+                ColHeader.appendChild(h6)
+                RowHeader.appendChild(ColHeader)
+                RowHeader.appendChild(ColHeader2)
+                ContainerFixed.appendChild(ButtonAddCart)
+                Container.appendChild(RowHeader)
+                Container.appendChild(RowStart)
+                Container.appendChild(ContainerDescription)
+                ContainerBottom.appendChild(Container)
+                ContainerBottom.appendChild(ContainerFixed)
+
+                let CountStars = 0,
+                CountCustomersStars = 0,
+                CountAllStars = 0;
+
+                if(stars != undefined){
+
+                  const KeysStars = Object.keys(stars);
+
+                  KeysStars.forEach(KeyStar => {
+
+                    const StarsCustomer = stars[KeyStar].stars;
+
+                    CountAllStars += Number(StarsCustomer)
+
+                    CountCustomersStars++
+
+                  })
+
+                 if(KeysStars.length != 0){
+
+                  const CalculatedStars =  5 * CountCustomersStars / CountAllStars,
+                  CalculatedPercent = ( 100 / CalculatedStars )
+
+                  if(CalculatedPercent <= 20){
+
+                    AddStars(1, RowStart, CountCustomersStars)                    
+
+                  }else if(CalculatedPercent >= 21 && CalculatedPercent <= 40){
+
+                    AddStars(2, RowStart, CountCustomersStars)  
+
+                  }else if(CalculatedPercent >= 41 && CalculatedPercent <= 59){
+
+                    AddStars(3, RowStart, CountCustomersStars)  
+                    
+                  }else if(CalculatedPercent >= 60 && CalculatedPercent <= 80){
+
+                    AddStars(4, RowStart, CountCustomersStars)  
+
+                  }else if(CalculatedPercent >= 81 && CalculatedPercent <= 100){
+
+                    AddStars(5, RowStart, CountCustomersStars)  
+
+                  }
+
+                 }
+                }else{
+
+                  
+                  AddStars(0, RowStart, 0) 
+
+                }
+            
+                ContainerItem.appendChild(Img)
+                ContainerItem.appendChild(ContainerBottom)
+
+            })
+
+        });
+    
+        return $render;
+      }
+    </script>
+    
+
+    

@@ -3,6 +3,7 @@
   --p1-bg-color-secundary: #2E2E2E;
   --p1-bg-color-principal: var(--p1-bg-color-primary);
   --p1-duration-animation-menu: .7s;
+  --p1-medium-text: 1.4rem;
   --f7-card-margin-horizontal: 16px;
   --f7-card-margin-vertical: 16px;
   --f7-card-content-padding-horizontal: 16px;
@@ -26,8 +27,8 @@
 }
 
 body,html{
-font-family: 'Poppins', sans-serif !important;
-max-width: 100vw !important;
+  font-family: 'Montserrat', sans-serif;
+  max-width: 100vw !important;
 }
 
 .scrolled-down{
@@ -46,7 +47,7 @@ will-change: transform;
 
 .cart__item__product{
   padding: 0.7rem;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .swiper-pagination-bullet-active{
@@ -67,7 +68,7 @@ margin: 0 auto;
 position: relative;
 top: 5rem;
 background-color: var(--p1-bg-color-secundary);
-border-radius: 12px;
+border-radius: 8px;
 width: 80vw;
 height: 10em;
 }
@@ -252,6 +253,7 @@ body{
 
 
 .menu{
+  border-top: 1px solid #303030;
   bottom: 0px;
   border-radius: 3rem;
   display: flex;
@@ -850,7 +852,7 @@ transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
   border: 0;
   outline: 0;
   color: #fff;
-  font-family: 'Karla', 'Arial', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   line-height: 1.2em;
   font-weight: 400;
@@ -1248,5 +1250,107 @@ animation: f7-cover-prev-to-current 450ms forwards;
   padding: 0.9rem;
 }
 
+.menu-item, .menu_item_cart{
+  --bgColorItem: #f54888;
+}
 
+.menu__item span{
+  color: white;
+  font-size: 1.6rem;
+}
 
+.card{
+  border-radius: 6px;
+  width: 100%;
+  min-height: 12rem !important;
+  box-shadow: rgb(2 2 2 / 25%) 0px 13px 27px -5px, rgb(0 0 0 / 30%) 0px 8px 16px -8px;
+  background-color: transparent;
+  background: transparent;
+}
+
+.card-header{
+  min-height: 8rem !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.card-content p {
+  font-weight: bold;
+  color: white;
+}
+
+.stepper-button-minus, .stepper-button-plus{
+  background-color: #303030;
+  border: 0px;
+}
+
+.stepper-input-wrap, .stepper-value{
+  border: 0px;
+  background-color: #303030;
+}
+
+.stepper .stepper-input-wrap input, .stepper-value{
+  font-weight: bold;
+  color: white;
+}
+
+.container__style .item-after{
+  color: white;
+  font-size: 1.2rem;
+}
+
+.container__style li{
+  border-bottom: 1px solid #303030;
+}
+
+.tab-link-active{
+  background-color:#303030;
+  border-radius: 8px;
+}
+
+.container-bottom-item{
+  bottom: 0px;
+  width: 100%;
+  height: 70%;
+  background-color: var(--p1-bg-color-secundary);
+  box-shadow: rgb(2 2 2 / 65%) 0px 13px 4rem -5px, rgb(0 0 0 / 50%) 0px 8px 35px -8px;
+  position: fixed;
+  left: 0px;
+}
+
+.text-item-menu{
+  font-size: var(--p1-medium-text);
+  color: white;
+}
+
+.container-fixed{
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+
+h6{
+  margin-bottom: 0.6rem
+}
+
+.subnavbar-home{
+  margin-top: 2.1rem;
+  left: 1rem;
+  width: 92%;
+  right: 1rem;
+}
+
+.searchbar, input, .subnavbar-home{
+  border-radius: 12px !important;
+}
+
+.container-search-itens{
+  width: 100%;
+  height: 85%;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  background-color: var(--p1-bg-color-secundary);
+  z-index: 1001;
+}

@@ -337,31 +337,38 @@ var routes = [
   },
   {
     path:  '/cart/',
+    transition: "f7-cover",
     url: './pages/cart.html',
     on: {
       pageInit: function(){
-        returnCartItems()
-        $("#popover-options").on("popover:open", function(){
-          
-            let $input_share = document.getElementById("share_cart_popover"),
-                $session_share = sessionStorage.getItem("cartShare");
-          
-            if($session_share == "sim"){
-              $input_share.checked = true
-            }else{
-              $input_share.checked = false
-            }
-          
-          })          
-          
-            returnPaymentProcessResults()
+        ReturnCartItens()
       },
-
-      pageBeforeOut: function(){
-        app.toast.close(".toast")
-        $("#oneButton").click()
-      }
     }
+  },
+  {
+    path: '/item/key/:key/keycategory/:keycategory/',
+    async: function ({ router, to, resolve }) {
+      // App instance
+      var app = router.app;
+
+      var key = to.params.key,
+      keycategory = to.params.keycategory;
+
+        var details = {
+          key: key,
+          keycategory: keycategory
+        };
+        resolve(
+          {
+            componentUrl: './pages/item.html',
+          },
+          {
+            props: {
+              details: details,
+            }
+          }
+        );
+    },
   },
   {
     path: '/paymentPending/',
