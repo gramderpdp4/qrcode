@@ -8,7 +8,6 @@ const functions = require("firebase-functions");
 const accountkey = require("./firebasekey.json");
 var moment = require('moment-timezone');
 const compress = require("compress-base64")
-const ngrok = require('ngrok');
 const { AES, enc } = require("crypto-js");
 const fs = require("fs");
 const Json = require("archiver/lib/plugins/json");
