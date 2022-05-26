@@ -50,8 +50,8 @@ app.use(express.static(__dirname + '/www'));
 
 adminFirebase.initializeApp({
     credential: adminFirebase.credential.cert(accountkey),
-    databaseURL: "https://playumqrcode-default-rtdb.firebaseio.com"
-  });
+    databaseURL: "https://cardapio-digital-f32c5-default-rtdb.firebaseio.com"
+});
   
 const db = adminFirebase.database()
 

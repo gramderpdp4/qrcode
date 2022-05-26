@@ -53,11 +53,7 @@
                 ContainerDescription = document.createElement("h5"),
                 h6 = document.createElement("h6");
 
-                LZMA.decompress(image, function on_decompress_complete(result) {
-                Img.src = result
-                }, function on_decompress_progress_update(percent) {
-                
-                });
+                Img.src = image
 
                 Img.style.mixBlendMode = "revert"
                 Img.style.width = "100%"

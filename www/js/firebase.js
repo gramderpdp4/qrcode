@@ -1,14 +1,14 @@
 
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBArlegLfU7lX71IC0YMhKiJuDLW7TORBE",
-  authDomain: "playumqrcode.firebaseapp.com",
-  databaseURL: "https://playumqrcode-default-rtdb.firebaseio.com",
-  projectId: "playumqrcode",
-  storageBucket: "playumqrcode.appspot.com",
-  messagingSenderId: "100447860358",
-  appId: "1:100447860358:web:86f058dcb79a446b280307",
-  measurementId: "G-G1B64YYDRS"
+  apiKey: "AIzaSyD0kmh0kchsfDG3SHfeCaaE0QD1BUA69TY",
+  authDomain: "cardapio-digital-f32c5.firebaseapp.com",
+  databaseURL: "https://cardapio-digital-f32c5-default-rtdb.firebaseio.com",
+  projectId: "cardapio-digital-f32c5",
+  storageBucket: "cardapio-digital-f32c5.appspot.com",
+  messagingSenderId: "305239338633",
+  appId: "1:305239338633:web:1b2fa53233798a80a72058",
+  measurementId: "G-HHGC9JNLGY"
 };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);

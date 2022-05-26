@@ -319,12 +319,8 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             CardContent.classList.add("card-content", "card-content-padding")
             Button.classList.add("button", "button-fill")
 
-            LZMA.decompress(image, function on_decompress_complete(result) {
-              CardHeader.style.backgroundImage = `url(${result})`
-              Button.setAttribute("onclick", "AddToCart('"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+result+"')")
-            }, function on_decompress_progress_update(percent) {
-               
-            });
+            CardHeader.style.backgroundImage = `url(${image})`
+            Button.setAttribute("onclick", "AddToCart('"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+image+"')")
 
             CardHeader.style.backgroundRepeat = "no-repeat"
             CardHeader.style.backgroundSize = "cover"
@@ -674,13 +670,7 @@ function ItensSearch(){
                 After.classList.add("item-after")
                 TitleRow.classList.add("item-title-row")
 
-                LZMA.decompress(image, function on_decompress_complete(result) {
-                 
-                  Media.innerHTML = `<img src="${result}" style="width: 70px; height: 70px; border-radius: 8px" />`
-               
-                }, function on_decompress_progress_update(percent) {
-                   
-                });
+                Media.innerHTML = `<img src="${image}" style="width: 70px; height: 70px; border-radius: 8px" />`
 
                 Title.style.color = "white"
                 After.style.color = "white"
@@ -738,6 +728,7 @@ function ItensSearch(){
                   }
                 }else{
                   Li.style.display = "none"
+                  Li.classList.add("no-stars")
                   ContainerItensSearch.appendChild(Li)
                 }
 
@@ -745,12 +736,75 @@ function ItensSearch(){
             }
           })
 
-          const h2TextAvaliable = `<h2 style="color: white; font-size: 1rem">Recomendamos para você</h2>`
+          const h2TextAvaliable = `<h2 class="text_search_title" style="color: white; font-size: 1rem">Recomendamos para você</h2>`
 
           ContainerItensSearch.insertAdjacentHTML("beforebegin", h2TextAvaliable)
 
+          const ElementTxtTitle = document.querySelector(".text_search_title");
+
+          $('.input-search-itens').on('keyup', function(){
+
+            // Retrieve the input field text and reset the count to zero
+            var filter = $(this).val(), count = 0;
+    
+            // Loop through the comment list
+            $(".list-search .item-title-search").each(function(){
+    
+                  const Parent = $(this).parent().parent().parent().parent(); 
+
+                  console.log($(this).text().search(new RegExp(filter, "i")))
+
+                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+
+                  ElementTxtTitle.innerText = "Resultados da pesquisa"
+
+                    Parent.css({
+                      "display": "none"
+                    });
+    
+                } else {
+
+                  if(filter.length == 0){
+
+                    ElementTxtTitle.innerText = "Recomendamos para você"
+
+                    if(Parent.hasClass("no-stars"))
+                    {
+
+                      Parent.css({
+                        "display": "none"
+                      })
+
+                    }else{
+
+                      Parent.css({
+                        "display": "block"
+                      });
+                    }
+
+                  }else{
+
+                    Parent.css({
+                      "display": "block"
+                    });
+
+                  }
+
+                    count++;
+
+                }
+            });
+    
+            // Update the count
+            var numberItems = count;
+  
+            
+            });
+            
+
         }
       })
+      
 
     }, Time);
   })
@@ -837,4 +891,3 @@ function AddStars(CountStars, ContainerElement, CountUsers){
       }
 
 }
-
