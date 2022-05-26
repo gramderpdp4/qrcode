@@ -736,7 +736,7 @@ function ItensSearch(){
             }
           })
 
-          const h2TextAvaliable = `<h2 class="text_search_title" style="color: white; font-size: 1rem">Recomendamos para você</h2>`
+          const h2TextAvaliable = `<h2 class="text_search_title" style="margin-left: 4vw; color: white; font-size: 1rem">Recomendamos para você</h2>`
 
           ContainerItensSearch.insertAdjacentHTML("beforebegin", h2TextAvaliable)
 

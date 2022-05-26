@@ -1354,3 +1354,7 @@ h6{
   background-color: var(--p1-bg-color-secundary);
   z-index: 1001;
 }
+
+.page-content{
+  overflow-y: scroll;
+}
