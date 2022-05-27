@@ -89,7 +89,7 @@ async function CreateNavbar(Logo, ColorSecundary, ColorPrimary, Key){
   document.documentElement.style.setProperty('--p1-bg-color-secundary', ColorSecundary);
 
   const NavbarCreate = `
-    <div class="navbar-bg"></div>
+    <div class="navbar-bg" style="background-color: none; background: none"></div>
     <div class="navbar-inner sliding" style="background-color: #212121 !important">
       <div class="title text-updt" style="color: #ffffff">Especialidades da casa</div>
       <div class="subnavbar subnavbar-home">
@@ -543,7 +543,15 @@ function ActivateNavbar(){
 
           ContainerFull.insertAdjacentHTML('beforeend', ElementPageSearch)
 
-            ItensSearch()
+          $(".title-large").css({
+            display: "none"
+          })
+
+          $(".subnavbar-home").css({
+            "top": "0px"
+          })
+          
+          ItensSearch()
 
         }
       },
@@ -554,6 +562,15 @@ function ActivateNavbar(){
           if(LastElement.classList.contains("container-search-itens")){
   
             LastElement.remove()
+
+            $(".title-large").css({
+              display: "block"
+            })
+
+            $(".subnavbar-home").css({
+              top: "100%"
+            })
+  
   
           }      
       }
