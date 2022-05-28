@@ -588,7 +588,7 @@ async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecr
     var user = userCredential.user;
 
     GetNameCustomer = CustomerName
-    GetKeyCustomer = CustomerKey
+    GetKeyCustomer = CustomerKey.toString()
 
     InsertDetailsUser(CustomerName)
 

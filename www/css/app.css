@@ -1409,5 +1409,30 @@ h6{
 }
 
 .swiper-comments{
-  overflow-y: scroll;
+  overflow: hidden;
+}
+
+.list-comment{
+  width: 100%;
+  position: fixed;
+  background-color: #2E2E2E;
+  bottom: 0.5rem;
+}
+
+.toast{
+  background-color: #000000;
+  color: white;
+  font-weight: bold;
+}
+
+.toast-button button{
+  font-weight: bold;
+}
+
+.messages{
+  background-color: transparent;
+}
+
+.message-avatar{
+  opacity: 1 !important;
 }

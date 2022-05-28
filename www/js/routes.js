@@ -221,7 +221,7 @@ var routes = [
     } 
   },
   {
-    path: '/comments/',
+    path: '/comments/key/:key/',
     sheet: {
       backdrop: false,
       backdropEl: false,
@@ -231,25 +231,11 @@ var routes = [
           // App instance
           var app = router.app;
 
-          var alimentos = to.params.alimentos;
-          var bebidas = to.params.bebidas;
-          var codigo = to.params.codigo;
+          let key = to.params.key;
 
           // We got user data from request
           var user = {
-
-              bebidas: bebidas,
-              alimentos: alimentos,
-              codigo: codigo,
-              links: [{
-                      title: 'Framework7 Website',
-                      url: 'http://framework7.io',
-                  },
-                  {
-                      title: 'Framework7 Forum',
-                      url: 'http://forum.framework7.io',
-                  },
-              ]
+            key: key
           };
           // Hide Preloader
           app.preloader.hide();
@@ -267,7 +253,13 @@ var routes = [
 
       },
       on: {
-        open: function(){
+        open: function(e){
+
+          const keyItem = e.route.params.key;
+
+          GetComments()
+
+          AddComment(keyItem)
 
           var swiper = app.swiper.create('.swiper-comments', {
             speed: 400,
@@ -293,6 +285,26 @@ var routes = [
             },
         });
         },
+        stepOpen: function(){
+          const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
+          ElementContent = ElementStep.querySelector(".page-content"),
+          ElementBlock = document.querySelector(".page-block-comments");
+
+          ElementStep.style.height = "100%"
+          ElementContent.style.height = "90%"
+          ElementBlock.style.height = "100%"
+        },
+        stepClose: function(){
+
+          const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
+          ElementContent = ElementStep.querySelector(".page-content"),
+          ElementBlock = document.querySelector(".page-block-comments");
+
+          ElementStep.style.height = "auto"
+          ElementContent.style.height = "25vh"
+          ElementBlock.style.height = "auto"
+
+        }
       }
   },
   },

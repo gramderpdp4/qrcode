@@ -8,39 +8,32 @@
             <div class="swiper swiper-comments" style="padding-top: 1rem">
                 <div class="swiper-wrapper" style="color: white">
                   <div class="swiper-slide">
-                    <div class="page-block" style="overflow-y: scroll">
-                        <div class="message-content">
-                            <div class="message message-received">
-                                <div class="message-avatar"
-                                  style="opacity: 1; background-image:url(https://cdn.framework7.io/placeholder/people-100x100-9.jpg)"></div>
-                                <div class="message-content">
-                                  <div class="message-name">Kate</div>
-                                  <div class="message-bubble">
-                                    <div class="message-text">Like it very much!</div>
-                                  </div>
+                    <div class="page-block page-block-comments">
+                      <div class="messages" id="messages-container">
+
+                      </div>
+                      <div class="list no-hairlines-md list-comment">
+                        <ul style="background: transparent">
+                          <form id="formComment">
+                            <li class="item-content item-input">
+                              <div class="item-inner">
+                                <div class="item-title item-label" style="color: white">Insira um comentário</div>
+                                <div class="item-input-wrap">
+                                  <input type="text" name="txt" placeholder="Escreva aqui seu comentário" />
+                                  <span class="input-clear-button"></span>
                                 </div>
                               </div>
-                              <div class="message message-received">
-                                <div class="message-avatar"
-                                  style="opacity: 1; background-image:url(https://cdn.framework7.io/placeholder/people-100x100-9.jpg)"></div>
-                                <div class="message-content">
-                                  <div class="message-name">Kate</div>
-                                  <div class="message-bubble">
-                                    <div class="message-text">Like it very much!</div>
-                                  </div>
+                            </li>
+                            <li class="item-content item-input">
+                              <div class="item-inner">
+                                <div class="item-input-wrap">
+                                  <input type="submit" style="border-radius: 6px !important; background-color: var(--p1-bg-color-principal); color: #000000; font-weight: bold;" value="Inserir comentário" class="button button-fill button-small">
                                 </div>
                               </div>
-                              <div class="message message-received">
-                                <div class="message-avatar"
-                                  style="opacity: 1; background-image:url(https://cdn.framework7.io/placeholder/people-100x100-9.jpg)"></div>
-                                <div class="message-content">
-                                  <div class="message-name">Kate</div>
-                                  <div class="message-bubble">
-                                    <div class="message-text">Like it very much!</div>
-                                  </div>
-                                </div>
-                              </div>
-                           </div>
+                            </li>
+                          </form>
+                          </ul>
+                          </div>
                     </div>
                   </div>
                   <div class="swiper-slide">Slide 2</div>
@@ -49,4 +42,5 @@
               </div>
           </div>
         </div>
+  </div>
   </div>
