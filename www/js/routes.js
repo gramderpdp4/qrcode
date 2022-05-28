@@ -297,19 +297,6 @@ var routes = [
           ElementContent.style.height = "90%"
           ElementBlock.style.height = "100%"
 
-          document.addEventListener('long-press', function(e) {
-            if (document.querySelector('.messages').contains(e.target)){
-              
-              ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-              
-            } else{
-          
-              ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
-
-            }
-          });
-
-
           ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
 
           ElementScroll.addEventListener("scroll", (e) => {
