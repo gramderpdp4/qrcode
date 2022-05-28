@@ -226,6 +226,7 @@ var routes = [
       backdrop: false,
       backdropEl: false,
       swipeToClose: true,
+      swipeHandler: '.sheet-modal-swipe-step',
       swipeToStep: true,
       async: function({ router, to, resolve }) {
           // App instance
@@ -293,6 +294,53 @@ var routes = [
           ElementStep.style.height = "100%"
           ElementContent.style.height = "90%"
           ElementBlock.style.height = "100%"
+
+          const ElementScroll = document.querySelector(".messages"),
+          ElementDisabledScroll = document.querySelector(".sheet-scrolled");
+
+          window.addEventListener('click', function(e){   
+            if (document.querySelector('.messages').contains(e.target)){
+              // Clicked in box
+            } else{
+              alert("Fora")
+            }
+          });
+
+
+          ElementScroll.addEventListener("scroll", (e) => {
+
+            const ElementScrollTop = ElementScroll.scrollTop,
+            ElementClientHeight = ElementScroll.clientHeight,
+            ElementScrollHeight = ElementScroll.scrollHeight;
+
+            if(ElementScrollTop){
+
+              if(ElementScrollTop <= 15){
+
+                if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+
+                  ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
+
+                }
+
+              }else{
+
+                if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+
+                  ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
+
+                }
+               
+              }
+
+            }
+            
+            console.log(ElementScrollTop)
+            console.log(ElementClientHeight)
+            console.log(ElementScrollHeight)
+
+          })
+
         },
         stepClose: function(){
 
