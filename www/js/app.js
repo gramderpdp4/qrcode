@@ -60,7 +60,6 @@ async function CodeRestaurant(){
             CreateNavbar(result.logo, result.color_secundary, result.color_primary, result.key_restaurant)
               .then(Completed => {
                   if(Completed == true){
-                    ActivateNavbar()
                     CreateTabs(result.key_restaurant)
                     .then(CompletedCreateTabs => {
                       CreateTabElementContainer()
@@ -128,6 +127,16 @@ async function CreateNavbar(Logo, ColorSecundary, ColorPrimary, Key){
   })
     
   NavbarElement.html(NavbarCreate)
+
+  const ElementInputSearch = document.querySelector(".input-search-itens");
+
+  ElementInputSearch.addEventListener("click", (e) => {
+
+    app.view.main.router.navigate("/searchpage/",{
+      transition: "f7-cover"
+    })
+
+  })
 
   return true
 }
@@ -553,62 +562,6 @@ function EventsTabs(){
   })
 }
 
-
-function ActivateNavbar(){
-  const ContainerFull = document.querySelector(".p1-container-full");
-
-  const ElementPageSearch = `
-    <div class="container-search-itens swing-in-top-fwd"></div>
-  `
-
-  var searchbar = app.searchbar.create({
-    el: '.searchbar',
-    searchContainer: '.listfd',
-    searchIn: '.item-title-search',
-    on: {
-      enable: function(){
-
-        const LastElement = ContainerFull.lastElementChild;
-
-        if(!LastElement.classList.contains("container-search-itens")){
-
-          ContainerFull.insertAdjacentHTML('beforeend', ElementPageSearch)
-
-          $(".title-large").css({
-            display: "none"
-          })
-
-          $(".subnavbar-home").css({
-            "top": "0px"
-          })
-          
-          ItensSearch()
-
-        }
-      },
-      disable: function(){
-
-        const LastElement = ContainerFull.lastElementChild;
-  
-          if(LastElement.classList.contains("container-search-itens")){
-  
-            LastElement.remove()
-
-            $(".title-large").css({
-              display: "block"
-            })
-
-            $(".subnavbar-home").css({
-              top: "100%"
-            })
-  
-  
-          }      
-      }
-    },
-  });
-}
-
 function ItemPage(KeyItem, KeyCategory){
   app.view.main.router.navigate("/item/key/"+KeyItem+"/keycategory/"+KeyCategory+"/",{
     transition: "f7-cover"
@@ -662,18 +615,9 @@ function InsertDetailsUser(CustomerName){
 
 function ItensSearch(){
 
-  const ContainerSearch = document.querySelector(".container-search-itens");
+  const ContainerSearch = document.querySelector(".container-search-itens"),
+  ContainerItensSearch = document.querySelector(".list-itens-search");
 
-  app.request.get("../pages/page-search-container.html").then(res => {
-    ContainerSearch.innerHTML = res.data
-  })
-  .then(completed => {
-
-    const ContainerItensSearch = document.querySelector(".list-itens-search"),
-    Time = 240;
-
-    setTimeout(() => {
-      
       const MenuFood = db.ref("/restaurants/" + KeyRestaurant + "/categories/");
 
       MenuFood.on("value", (data) => {
@@ -769,14 +713,12 @@ function ItensSearch(){
                 
                 if(ElementCountStars > 59){
                   if(MaxElementsStars < 5){
-                    Li.style.display = "block"
                     ContainerItensSearch.appendChild(Li)
 
                     MaxElementsStars++
                   }
                 }else{
-                  Li.style.display = "none"
-                  Li.classList.add("no-stars")
+                  Li.classList.add("no-stars", "hidden-by-searchbar")
                   ContainerItensSearch.appendChild(Li)
                 }
 
@@ -788,74 +730,8 @@ function ItensSearch(){
 
           ContainerItensSearch.insertAdjacentHTML("beforebegin", h2TextAvaliable)
 
-          const ElementTxtTitle = document.querySelector(".text_search_title");
-
-          $('.input-search-itens').on('keyup', function(){
-
-            // Retrieve the input field text and reset the count to zero
-            var filter = $(this).val(), count = 0;
-    
-            // Loop through the comment list
-            $(".list-search .item-title-search").each(function(){
-    
-                  const Parent = $(this).parent().parent().parent().parent(); 
-
-                  console.log($(this).text().search(new RegExp(filter, "i")))
-
-                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-
-                  ElementTxtTitle.innerText = "Resultados da pesquisa"
-
-                    Parent.css({
-                      "display": "none"
-                    });
-    
-                } else {
-
-                  if(filter.length == 0){
-
-                    ElementTxtTitle.innerText = "Recomendamos para você"
-
-                    if(Parent.hasClass("no-stars"))
-                    {
-
-                      Parent.css({
-                        "display": "none"
-                      })
-
-                    }else{
-
-                      Parent.css({
-                        "display": "block"
-                      });
-                    }
-
-                  }else{
-
-                    Parent.css({
-                      "display": "block"
-                    });
-
-                  }
-
-                    count++;
-
-                }
-            });
-    
-            // Update the count
-            var numberItems = count;
-  
-            
-            });
-            
-
         }
       })
-      
-
-    }, Time);
-  })
 }
 
 function CalculatorStart(CalculatedPercent, Container, CountCustomers){

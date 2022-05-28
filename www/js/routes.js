@@ -9,6 +9,50 @@ var routes = [
     url: './pages/about.html',
   },
   {
+    path: '/searchpage/',
+    url: './pages/page-search-container.html',
+    on: {
+      pageInit: function(){
+
+          app.searchbar.create({
+          el: '.searchbar-page',
+          searchContainer: '.list-itens-search',
+          searchIn: '.item-title',
+          on: {
+            search(sb, query, previousQuery) {
+
+              if(query.length == 0){
+
+                const AllElementsNoStars = document.querySelectorAll(".no-stars"),
+                TxtRecommended = document.querySelector(".text_search_title");
+
+                AllElementsNoStars.forEach(Element => {
+                  Element.classList.add("hidden-by-searchbar")
+                })
+
+                TxtRecommended.innerText = "Recomendamos para você"
+
+              }else{
+
+                const TxtRecommended = document.querySelector(".text_search_title");
+
+                TxtRecommended.innerText = "Resultado de pesquisa"
+
+              }
+            }
+          }
+        });
+
+        const InputSearch = document.querySelector(".input-search-page");
+
+        InputSearch.focus()
+
+        ItensSearch()
+
+      }
+    }
+  },
+  {
     path: '/search/',
     url: './pages/search.html',
     transition: "f7-p1",
