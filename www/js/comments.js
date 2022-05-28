@@ -67,6 +67,14 @@ function AddComment(KeyItem){
 
     const Comments = db.ref("/restaurants/" + KeyRestaurant + "/comments/");
 
+    FormComment.addEventListener("click", (e) => {
+
+        app.sheet.stepOpen(".sheet-modal-comments")
+
+        StepOpenComments(1)
+
+    })
+
     FormComment.addEventListener("submit", (e) => {
 
         const TxtComment = FormComment.txt.value;
@@ -123,5 +131,97 @@ function AddComment(KeyItem){
         e.preventDefault();
 
     })
+}
+
+
+function StepOpenComments(Number){
+
+    const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
+    ElementContent = ElementStep.querySelector(".page-content-comments"),
+    ElementBlock = document.querySelector(".page-block-comments"),
+    ElementScroll = document.querySelector(".messages"),
+    ElementDisabledScroll = document.querySelector(".sheet-scrolled"),
+    ElementList = document.querySelector(".list-comment ul form"),
+    ElementTxtInput = document.querySelector(".input_txt_comment");
+
+    ElementStep.style.height = "100%"
+    ElementContent.style.height = "90%"
+    ElementBlock.style.height = "100%"
+
+    ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
+
+    ElementScroll.addEventListener("scroll", (e) => {
+
+      const ElementScrollTop = ElementScroll.scrollTop,
+      ElementClientHeight = ElementScroll.clientHeight,
+      ElementScrollHeight = ElementScroll.scrollHeight;
+
+      if(ElementScrollTop){
+
+        console.log(ElementScrollTop)
+
+        if(ElementScrollTop < 25 || ElementScrollTop == 0 || ElementScrollTop < 0){
+
+          if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+
+            ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
+
+          }
+
+        }else{
+
+          if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+
+            ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
+
+          }
+         
+        }
+      }
+    })
+
+    
+    ElementTxtInput.removeAttribute("readonly")
+    ElementTxtInput.removeAttribute("disabled")
+
+    const ButtonSendComment = document.querySelector(".button-send-comment");
+
+    if(!ButtonSendComment){
+
+        const InputSend = `
+        <li class="item-content item-input">
+            <div class="item-inner">
+                <div class="item-input-wrap">
+                <input type="submit" class="button button-fill button-small button-send-comment" value="Publicar comentário" />
+                </div>
+            </div>
+        </li>
+        `
+
+        ElementList.insertAdjacentHTML("beforeend", InputSend)
+
+    }
+}
+
+function StepCloseComments(){
+
+    const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
+    ElementContent = ElementStep.querySelector(".page-content"),
+    ElementBlock = document.querySelector(".page-block-comments"),
+    ElementTxtInput = document.querySelector(".input_txt_comment");
+
+    ElementStep.style.height = "auto"
+    ElementContent.style.height = "25vh"
+    ElementBlock.style.height = "auto"
+
+    const ButtonSendComment = document.querySelector(".button-send-comment");
+
+    if(ButtonSendComment){
+
+        ButtonSendComment.parentNode.parentNode.parentNode.remove()
+        ElementTxtInput.setAttribute("readonly", "readonly")
+        ElementTxtInput.setAttribute("disabled", "disabled")
+
+    }
 
 }

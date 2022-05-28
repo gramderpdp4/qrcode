@@ -287,60 +287,13 @@ var routes = [
         });
         },
         stepOpen: function(){
-          const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
-          ElementContent = ElementStep.querySelector(".page-content"),
-          ElementBlock = document.querySelector(".page-block-comments"),
-          ElementScroll = document.querySelector(".messages"),
-          ElementDisabledScroll = document.querySelector(".sheet-scrolled");
-
-          ElementStep.style.height = "100%"
-          ElementContent.style.height = "90%"
-          ElementBlock.style.height = "100%"
-
-          ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-
-          ElementScroll.addEventListener("scroll", (e) => {
-
-            const ElementScrollTop = ElementScroll.scrollTop,
-            ElementClientHeight = ElementScroll.clientHeight,
-            ElementScrollHeight = ElementScroll.scrollHeight;
-
-            if(ElementScrollTop){
-
-              console.log(ElementScrollTop)
-
-              if(ElementScrollTop <= 20){
-
-                if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-
-                  ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
-
-                }
-
-              }else{
-
-                if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-
-                  ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-
-                }
-               
-              }
-
-            }
-
-          })
+          
+          StepOpenComments()
 
         },
         stepClose: function(){
 
-          const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
-          ElementContent = ElementStep.querySelector(".page-content"),
-          ElementBlock = document.querySelector(".page-block-comments");
-
-          ElementStep.style.height = "auto"
-          ElementContent.style.height = "25vh"
-          ElementBlock.style.height = "auto"
+          StepCloseComments()
 
         }
       }

@@ -1412,7 +1412,7 @@ h6{
   width: 100%;
   position: fixed;
   background-color: #2E2E2E;
-  bottom: 0rem;
+  bottom: 1rem;
 }
 
 .toast{
@@ -1447,4 +1447,11 @@ h6{
   padding-bottom: 15rem;
   position: relative;
   overflow-y: scroll;
+}
+
+.button-send-comment{
+  background-color: var(--p1-bg-color-primary);
+  color: black;
+  border-radius: 6px !important;
+  font-weight: bold !important;
 }

@@ -1,10 +1,15 @@
-<div class="sheet-modal" style="height: 70% !important;" data-long-press-delay="150">
+<div class="sheet-modal sheet-modal-comments" style="height: 70% !important;" data-long-press-delay="150">
     <div class="sheet-modal-inner">
         <div class="sheet-scrolled sheet-modal-swipe-step">
           <div class="display-flex padding justify-content-space-between align-items-center">
             <b style="color: white">Comentários e avaliações</b>
+            <a href="#" class="back" style="color: var(--p1-bg-color-primary);">
+              <span class="material-symbols-outlined">
+              close
+              </span>
+            </a>
           </div>
-          <div class="page-content" style="position: relative; height: 25vh; padding-top: 2rem;">
+          <div class="page-content page-content-comments" style="position: relative; height: 25vh; padding-top: 2rem;">
             <div class="swiper swiper-comments" style="padding-top: 1rem">
                 <div class="swiper-wrapper" style="color: white">
                   <div class="swiper-slide">
@@ -17,17 +22,9 @@
                           <form id="formComment">
                             <li class="item-content item-input">
                               <div class="item-inner">
-                                <div class="item-title item-label" style="color: white">Insira um comentário</div>
                                 <div class="item-input-wrap">
-                                  <input type="text" name="txt" placeholder="Escreva aqui seu comentário" />
+                                  <input type="text" class="input_txt_comment" name="txt" disabled="disabled" readonly="readonly" placeholder="Escreva aqui seu comentário" />
                                   <span class="input-clear-button"></span>
-                                </div>
-                              </div>
-                            </li>
-                            <li class="item-content item-input">
-                              <div class="item-inner">
-                                <div class="item-input-wrap">
-                                  <input type="submit" style="border-radius: 6px !important; background-color: var(--p1-bg-color-principal); color: #000000; font-weight: bold;" value="Inserir comentário" class="button button-fill button-small">
                                 </div>
                               </div>
                             </li>
