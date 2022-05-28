@@ -12,7 +12,7 @@ var routes = [
     path: '/searchpage/',
     url: './pages/page-search-container.html',
     on: {
-      pageAfterIn: function(){
+      pageInit: function(){
 
           app.searchbar.create({
           el: '.searchbar-page',
