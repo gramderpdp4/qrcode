@@ -297,13 +297,18 @@ var routes = [
           ElementContent.style.height = "90%"
           ElementBlock.style.height = "100%"
 
-          window.addEventListener('click', function(e){   
+          document.addEventListener('long-press', function(e) {
             if (document.querySelector('.messages').contains(e.target)){
-              // Clicked in box
+              
+              ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
+              
             } else{
           
+              ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
+
             }
           });
+
 
           ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
 
@@ -317,7 +322,7 @@ var routes = [
 
               console.log(ElementScrollTop)
 
-              if(ElementScrollTop <= 40){
+              if(ElementScrollTop <= 20){
 
                 if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
 
