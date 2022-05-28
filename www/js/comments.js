@@ -136,7 +136,7 @@ function AddComment(KeyItem){
 
 function StepOpenComments(Number){
 
-    const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
+    const ElementStep = document.querySelector(".sheet-scrolled"),
     ElementContent = ElementStep.querySelector(".page-content-comments"),
     ElementBlock = document.querySelector(".page-block-comments"),
     ElementScroll = document.querySelector(".messages"),
@@ -205,8 +205,8 @@ function StepOpenComments(Number){
 
 function StepCloseComments(){
 
-    const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
-    ElementContent = ElementStep.querySelector(".page-content"),
+    const ElementStep = document.querySelector(".sheet-scrolled"),
+    ElementContent = ElementStep.querySelector(".page-content-comments"),
     ElementBlock = document.querySelector(".page-block-comments"),
     ElementTxtInput = document.querySelector(".input_txt_comment");
 

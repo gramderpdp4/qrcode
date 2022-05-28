@@ -226,7 +226,7 @@ var routes = [
       backdrop: false,
       backdropEl: false,
       swipeToClose: true,
-      swipeHandler: '.sheet-modal-swipe-step',
+      swipeHandler: '.sheet-modal-swipe-step, .container-handler',
       swipeToStep: true,
       async: function({ router, to, resolve }) {
           // App instance
