@@ -253,16 +253,17 @@ body{
 
 
 .menu{
+  padding-inline-start: 0px;
+  padding-block-start: 0px;
+  margin-block-end: 0px;
   border-top: 1px solid #303030;
   bottom: 0px;
-  border-radius: 3rem;
+  padding: 0.5rem;
   display: flex;
-  left: 2.9vw;
   /* Works well with 100% width  */
-  width: 76vw;
+  width: 100vw;
   font-size: 1.5em;
-  padding: 0 2.85em;
-  position: absolute !important;
+  position: fixed !important;
   align-items: center;
   justify-content: center;
   background-color: var(--p1-bg-color-secundary);

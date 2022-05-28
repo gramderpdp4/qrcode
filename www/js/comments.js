@@ -221,6 +221,7 @@ function StepCloseComments(){
         ButtonSendComment.parentNode.parentNode.parentNode.remove()
         ElementTxtInput.setAttribute("readonly", "readonly")
         ElementTxtInput.setAttribute("disabled", "disabled")
+        ElementStep.classList.add("sheet-modal-swipe-step")
 
     }
 
