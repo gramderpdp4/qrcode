@@ -24,6 +24,8 @@ KeyTable,
 GetKeyCustomer,
 GetNameCustomer;
 
+
+
 async function CodeRestaurant(){
   const getUrl = window.location.href,
   thisUrl = new URL(getUrl),
@@ -192,7 +194,6 @@ async function CreateTabs(Key){
 
         ElementTabs.appendChild(Button)
       }
-
     }
   })
 
@@ -241,7 +242,6 @@ async function CreateTabsPages(KeyRestaurant){
           Tab.classList.add("page-content", "tab", `menu${code}`)
         }
 
-        Tab.style.marginTop = "3.5rem"
         Tab.style.zIndex = "0"
 
         Array_tabs.push({
@@ -289,10 +289,15 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           const ContainerMenu = document.querySelector(".menu"+CodeMenu);
   
           ContainerMenu.innerHTML = `
-          <b style="color: white; margin-left: 5vw; font-size: 1.1rem; border-bottom: 1px solid #303030">${Category}</b>
-          <div class="container${CodeMenu}" style="display: flex; margin-left: 4vw; margin-right: 4vw">
+          <div class="container${CodeMenu} container-items" style="display: flex; margin-left: 4vw; margin-right: 4vw">
           </div>
           `
+
+          const TitleTab = `
+          <b style="color: white; margin-left: 5vw; font-size: 1.1rem; border-bottom: 1px solid #303030">${Category}</b>
+          `
+
+          ContainerMenu.insertAdjacentHTML("afterbegin", TitleTab)
 
         const ContainerMenuCode = document.querySelector(".container"+CodeMenu)
         ContainerMenuCode.classList.add("row")
@@ -357,12 +362,38 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           app.preloader.hideIn(".tabs-elements")
         }
 
+                      
+        const ElementsScroll = document.querySelectorAll(".container-items"),
+        ElementNavbar = document.querySelector(".title-large-text"),
+        Subnavbar = document.querySelector(".subnavbar");
+
+        ElementsScroll.forEach(ElementScroll => {
+
+          const ParentElement = ElementScroll.parentElement;
+
+          ElementScroll.addEventListener("scroll", (e) => {
+            if(ElementScroll.scrollTop > 150){
+
+              ParentElement.style.marginTop = "0px"
+              ElementNavbar.style.display = "none"
+              Subnavbar.style.top = "0px"
+
+            }else{
+
+              ParentElement.style.marginTop = "3.5rem"
+              ElementNavbar.style.display = "block"
+              Subnavbar.style.top = "100%"
+
+            }
+          })
+        })
+
       }
     })
-
   })
 
 }
+
 
 async function AuthUser(KeyRestaurant){
   const SessionExists = localStorage.getItem("Session_user"),

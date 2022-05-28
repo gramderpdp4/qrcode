@@ -877,7 +877,8 @@ transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
 
 .text__name__resizable{
   position: relative;
-  margin: 1em 0 0 41.5vw;
+  margin-top: 1rem;
+  float: right;
   color: white;
 }
 
@@ -1347,18 +1348,21 @@ h6{
 
 .container-search-itens{
   width: 100%;
-  height: 89%;
-  position: fixed;
+  height: 90vh;
+  position: absolute;
   bottom: 0px;
   left: 0px;
   background-color: var(--p1-bg-color-secundary);
   z-index: 1001;
 }
 
-.page-content{
+.container-items{
   overflow-y: scroll;
+  margin-bottom: 10rem;
+  height: 120%;
+  margin-top: 1rem;
 }
 
-.page-content .tab{
-  padding-bottom: 10rem;
+.page-content{
+  overflow: hidden;
 }
