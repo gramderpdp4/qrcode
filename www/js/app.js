@@ -24,8 +24,6 @@ KeyTable,
 GetKeyCustomer,
 GetNameCustomer;
 
-
-
 async function CodeRestaurant(){
   const getUrl = window.location.href,
   thisUrl = new URL(getUrl),

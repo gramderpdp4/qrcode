@@ -1366,3 +1366,48 @@ h6{
 .page-content{
   overflow: hidden;
 }
+
+.sheet-modal{
+  background-color: #303030;
+  box-shadow: var(--f7-navbar-shadow-image);
+}
+
+.swiper-comments .swiper-pagination-bullet{
+  padding: 0.35rem 2rem;
+  margin-top: 1rem;
+  background: none !important;
+  background-color: none !important;
+  color: white;
+  background: var(--p1-bg-color-secundary) !important;
+  text-align: center;
+  width: auto !important;
+  border-radius: 12px;
+  height: 1.2rem;
+}
+
+.swiper-comments .swiper-pagination {
+  text-align: left;
+  bottom: 85% !important;
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  position: fixed;
+}
+
+.swiper-comments .swiper-wrapper, .swiper-comments .swiper-slide, .swiper-comments{
+  height: 100% !important;
+}
+
+.swiper-comments .swiper-slide{
+  padding-top: 2.2rem;
+}
+
+.message-received .message-bubble{
+  background: #2E2E2E;
+  color: white;
+  padding: 0.7rem;
+}
+
+.swiper-comments{
+  overflow-y: scroll;
+}

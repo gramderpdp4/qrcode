@@ -38,23 +38,23 @@
                 const image = data.val().image,
                 name = data.val().name,
                 description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-                stars = data.val().stars;
+                stars = data.val().stars,
+                price = data.val().price;
 
                 const Img = document.createElement("img"),
                 ContainerBottom = document.createElement("div"),
                 Container = document.createElement("div"),
                 ContainerFixed = document.createElement("div"),
                 ButtonAddCart = document.createElement("button"),
-                RowStart = document.createElement("div"),
+                RowStart = document.createElement("a"),
                 RowHeader = document.createElement("div"),
                 ColHeader = document.createElement("div"),
                 ColHeader2 = document.createElement("div"),
-                ButtonAddComment = document.createElement("button"),
+                ButtonAddComment = document.createElement("a"),
                 ContainerDescription = document.createElement("h5"),
                 h6 = document.createElement("h6");
 
                 Img.src = image
-
                 Img.style.mixBlendMode = "revert"
                 Img.style.width = "100%"
                 h6.innerText = name
@@ -68,12 +68,16 @@
                 ButtonAddCart.style.color = "#000000"
                 ButtonAddCart.style.fontWeight = "bold"
                 RowStart.style.maxWidth = "30%"
+                RowStart.id = "row-stars"
+                RowStart.href = "/comments/"
+                RowStart.style.color = "white"
                 ColHeader2.style.position = "absolute"
                 ColHeader2.style.right = "0.5rem"
                 ColHeader.style.marginTop = "-1.5rem"
                 ButtonAddComment.style.marginTop = "0.4rem"
                 ButtonAddComment.style.width = "50%"
                 ButtonAddComment.style.float = "right"
+                ButtonAddComment.href = "/comments/"
                 ButtonAddComment.style.color = "var(--p1-bg-color-principal)"
 
                 ButtonAddComment.innerHTML = `
@@ -81,6 +85,9 @@
                 mode_comment
                 </span>
                 `
+
+                ButtonAddCart.setAttribute("onclick", "AddToCart('"+details.key+"', '"+name+"', '"+price+"', '"+image+"')")
+
                 RowHeader.classList.add("row")
                 ColHeader.classList.add("col-75")
                 ColHeader2.classList.add("col-25")
@@ -91,9 +98,7 @@
                 ContainerFixed.classList.add("container-fixed")
                 RowStart.classList.add("row")
                 ButtonAddComment.classList.add("button")
-
-                RowStart.id = "row-stars"
-
+                
                 ColHeader2.appendChild(ButtonAddComment)
                 ColHeader.appendChild(h6)
                 RowHeader.appendChild(ColHeader)

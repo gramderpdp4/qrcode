@@ -221,10 +221,12 @@ var routes = [
     } 
   },
   {
-    path: '/coments/',
+    path: '/comments/',
     sheet: {
       backdrop: false,
       backdropEl: false,
+      swipeToClose: true,
+      swipeToStep: true,
       async: function({ router, to, resolve }) {
           // App instance
           var app = router.app;
@@ -254,7 +256,7 @@ var routes = [
 
           // Resolve route to load page
           resolve({
-                  componentUrl: './pages/sheet-coments.html',
+                  url: './pages/sheet-comments.html',
               }, {
                   props: {
                       user: user,
@@ -265,10 +267,33 @@ var routes = [
 
       },
       on: {
-        opened: function(){
-          returnComments()
-        }
-      },
+        open: function(){
+
+          var swiper = app.swiper.create('.swiper-comments', {
+            speed: 400,
+            spaceBetween: 100,
+            pagination: {
+              el: ".swiper-pagination",
+              clickable: true,
+              renderBullet: function (index, className) {
+                let ElementTab;
+
+                if(index == 0){
+
+                  ElementTab = `<span class="${className}">Comentários</span>`
+
+                }else{
+
+                  ElementTab = `<span class="${className}">Avaliações</span>`
+
+                }
+
+                return ElementTab
+              },
+            },
+        });
+        },
+      }
   },
   },
   {
