@@ -160,7 +160,7 @@ function StepOpenComments(Number){
 
         console.log(ElementScrollTop)
 
-        if(ElementScrollTop < 25 || ElementScrollTop == 0 || ElementScrollTop < 0){
+        if(ElementScrollTop < 25){
 
           if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
 
@@ -168,7 +168,7 @@ function StepOpenComments(Number){
 
           }
 
-        }else{
+        }else if(ElementScrollTop == 0 || ElementScrollTop > 25){
 
           if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
 
