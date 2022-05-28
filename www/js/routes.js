@@ -18,6 +18,7 @@ var routes = [
           el: '.searchbar-page',
           searchContainer: '.list-itens-search',
           searchIn: '.item-title',
+          backdrop: false,
           on: {
             search(sb, query, previousQuery) {
 
