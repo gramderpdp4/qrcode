@@ -613,6 +613,8 @@ function InsertDetailsUser(CustomerName){
 
 }
 
+let DirectionItensSearch = 0;
+
 function ItensSearch(){
 
   const ContainerSearch = document.querySelector(".container-search-itens"),
@@ -672,6 +674,8 @@ function ItensSearch(){
                 Title.innerText = name
                 After.innerText = price
 
+                Link.setAttribute("onclick", "ItemPage('"+KeyMenu+"', '"+Key+"')")
+
                 Subtitle.appendChild(Row)
                 TitleRow.appendChild(Title)
                 TitleRow.appendChild(After)
@@ -726,10 +730,16 @@ function ItensSearch(){
             }
           })
 
-          const h2TextAvaliable = `<h2 class="text_search_title" style="margin-left: 4vw; color: white; font-size: 1rem">Recomendamos para você</h2>`
+          const TxtTitleSearch = document.querySelector(".text_search_title");
 
-          ContainerItensSearch.insertAdjacentHTML("beforebegin", h2TextAvaliable)
+          if(!TxtTitleSearch){
 
+            const h2TextAvaliable = `<h2 class="text_search_title" style="margin-left: 4vw; color: white; font-size: 1rem">Recomendamos para você</h2>`
+
+            ContainerItensSearch.insertAdjacentHTML("beforebegin", h2TextAvaliable)  
+
+          }
+         
         }
       })
 }

@@ -12,43 +12,118 @@ var routes = [
     path: '/searchpage/',
     url: './pages/page-search-container.html',
     on: {
-      pageInit: function(){
+      pageAfterIn: function(e){
+
+         if(DirectionItensSearch == 0){
 
           app.searchbar.create({
-          el: '.searchbar-page',
-          searchContainer: '.list-itens-search',
-          searchIn: '.item-title',
-          backdrop: false,
-          on: {
-            search(sb, query, previousQuery) {
+            el: '.searchbar-page',
+            searchContainer: '.list-itens-search',
+            searchIn: '.item-title',
+            backdrop: false,
+            on: {
+              search(sb, query, previousQuery) {
 
-              if(query.length == 0){
+                const ContainerAllItens = document.querySelector(".list-itens-search");
+  
+                if(query.length == 0){
+  
+                  const AllElementsNoStars = document.querySelectorAll(".no-stars"),
+                  TxtRecommended = document.querySelector(".text_search_title");
+  
+                  AllElementsNoStars.forEach(Element => {
+                    Element.classList.add("hidden-by-searchbar")
+                  })
+  
+                  TxtRecommended.innerText = "Recomendamos para você"
+             
+                  const TxtNotResults = document.querySelector(".not-results");
 
-                const AllElementsNoStars = document.querySelectorAll(".no-stars"),
-                TxtRecommended = document.querySelector(".text_search_title");
+                  if(TxtNotResults){
 
-                AllElementsNoStars.forEach(Element => {
-                  Element.classList.add("hidden-by-searchbar")
-                })
+                    TxtNotResults.remove()
 
-                TxtRecommended.innerText = "Recomendamos para você"
+                  }
+  
+                }else{
+  
+                  const TxtRecommended = document.querySelector(".text_search_title");
+  
+                  TxtRecommended.innerText = "Resultado de pesquisa"
 
-              }else{
+                  const AllElementsSearch = document.querySelectorAll(".list-itens-search li");
 
-                const TxtRecommended = document.querySelector(".text_search_title");
+                  let countElementsShow = 0;
 
-                TxtRecommended.innerText = "Resultado de pesquisa"
+                  AllElementsSearch.forEach(Element => {
 
+                    if(!Element.classList.contains("hidden-by-searchbar")){
+
+                      countElementsShow++
+
+                      const TxtNotResults = document.querySelector(".not-results");
+
+                      if(TxtNotResults){
+
+                        TxtNotResults.remove()
+
+                      }
+
+                    }
+
+                    if(countElementsShow == 0){
+
+                      const TxtNotResults = document.querySelector(".not-results");
+
+                      if(!TxtNotResults){
+
+                        const StyleElementTxtNotResults = {
+                          textAlign: 'center',
+                          width: '100vw',
+                          position: 'absolute'
+                        }
+
+                        const ElementTxtNotResults = document.createElement("b");
+
+                        ElementTxtNotResults.innerText = "Nenhum resultado encontrado";
+
+                        ElementTxtNotResults.classList.add("not-results")
+
+                        Object.assign(ElementTxtNotResults.style, StyleElementTxtNotResults)
+
+                        ContainerAllItens.insertAdjacentElement("beforeend", ElementTxtNotResults)
+
+                      }
+
+                    }
+
+                  })
+  
+                }
               }
             }
-          }
-        });
+          });
+  
+          const InputSearch = document.querySelector(".input-search-page");
+  
+          InputSearch.focus()
+  
+          ItensSearch()
 
-        const InputSearch = document.querySelector(".input-search-page");
+         }
 
-        InputSearch.focus()
+      },
+      pageBeforeOut: function(e){
 
-        ItensSearch()
+        if(e.detail.direction == "forward"){
+
+          DirectionItensSearch = 1
+
+        }else{
+
+          DirectionItensSearch = 0
+
+        }
 
       }
     }
