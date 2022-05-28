@@ -289,23 +289,23 @@ var routes = [
         stepOpen: function(){
           const ElementStep = document.querySelector(".sheet-modal-swipe-step"),
           ElementContent = ElementStep.querySelector(".page-content"),
-          ElementBlock = document.querySelector(".page-block-comments");
+          ElementBlock = document.querySelector(".page-block-comments"),
+          ElementScroll = document.querySelector(".messages"),
+          ElementDisabledScroll = document.querySelector(".sheet-scrolled");
 
           ElementStep.style.height = "100%"
           ElementContent.style.height = "90%"
           ElementBlock.style.height = "100%"
 
-          const ElementScroll = document.querySelector(".messages"),
-          ElementDisabledScroll = document.querySelector(".sheet-scrolled");
-
           window.addEventListener('click', function(e){   
             if (document.querySelector('.messages').contains(e.target)){
               // Clicked in box
             } else{
-              alert("Fora")
+          
             }
           });
 
+          ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
 
           ElementScroll.addEventListener("scroll", (e) => {
 
@@ -315,7 +315,9 @@ var routes = [
 
             if(ElementScrollTop){
 
-              if(ElementScrollTop <= 15){
+              console.log(ElementScrollTop)
+
+              if(ElementScrollTop <= 40){
 
                 if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
 
@@ -334,10 +336,6 @@ var routes = [
               }
 
             }
-            
-            console.log(ElementScrollTop)
-            console.log(ElementClientHeight)
-            console.log(ElementScrollHeight)
 
           })
 

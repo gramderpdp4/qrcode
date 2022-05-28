@@ -1408,10 +1408,6 @@ h6{
   padding: 0.7rem;
 }
 
-.swiper-comments{
-  overflow: hidden;
-}
-
 .list-comment{
   width: 100%;
   position: fixed;
@@ -1449,6 +1445,6 @@ h6{
 .page-block-comments, .messages{
   height: 100% !important;
   padding-bottom: 15rem;
-  overflow-y: scroll;
   position: relative;
+  overflow-y: scroll;
 }
