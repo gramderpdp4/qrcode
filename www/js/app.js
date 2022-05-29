@@ -301,10 +301,12 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           `
 
           const TitleTab = `
-          <b style="color: white; margin-left: 5vw; font-size: 1.1rem; border-bottom: 1px solid #303030">${Category}</b>
+          <b style="color: white; top: 10.2rem; position: fixed; margin-left: 5vw; font-size: 1.1rem; border-bottom: 1px solid #303030">${Category}</b>
           `
 
-          ContainerMenu.insertAdjacentHTML("afterbegin", TitleTab)
+          const ContainerChildreMenu = document.querySelector(".container"+CodeMenu)
+
+          ContainerChildreMenu.insertAdjacentHTML("beforebegin", TitleTab)
 
         const ContainerMenuCode = document.querySelector(".container"+CodeMenu)
         ContainerMenuCode.classList.add("row")
@@ -372,24 +374,56 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
                       
         const ElementsScroll = document.querySelectorAll(".container-items"),
         ElementNavbar = document.querySelector(".title-large-text"),
-        Subnavbar = document.querySelector(".subnavbar");
+        SubnavbarHome = $(".navbar .subnavbar");
 
         ElementsScroll.forEach(ElementScroll => {
 
           const ParentElement = ElementScroll.parentElement;
 
+          let CountScroll = 0;
+
+          let LastScrolled = 0;
+
           ElementScroll.addEventListener("scroll", (e) => {
-            if(ElementScroll.scrollTop > 150){
 
-              ParentElement.style.marginTop = "0px"
-              ElementNavbar.style.display = "none"
-              Subnavbar.style.top = "0px"
+            const ElementScrollTop = ElementScroll.scrollTop,
+            CalculatedOpacityEffect = 100 / (Number(ElementScrollTop) + ElementScrollTop * 2),
+            OpacityEffect = CalculatedOpacityEffect.toFixed(1),
+            CalculatedScrollNavbar = ElementScrollTop / 2;
 
+            if(LastScrolled >= ElementScrollTop){
+
+              if(CalculatedScrollNavbar < 150){
+
+                SubnavbarHome.css({
+                  transform: `translateY(-${CalculatedScrollNavbar}%)`,
+                  "transition-timing-function": "ease-in-out"
+                })
+  
+                if(CalculatedScrollNavbar == 0){
+                  ElementNavbar.style.opacity = 1
+                 
+                }else{
+                  ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
+                  
+                }
+
+              }
+              
             }else{
 
-              ParentElement.style.marginTop = "3.5rem"
-              ElementNavbar.style.display = "block"
-              Subnavbar.style.top = "100%"
+              LastScrolled = ElementScrollTop
+                         
+              if(CalculatedScrollNavbar < 150){
+
+                SubnavbarHome.css({
+                  "transform": `translateY(-${CalculatedScrollNavbar}%)`,
+                  "transition-timing-function": "ease-in-out"
+                })
+  
+                ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
+
+              }
 
             }
           })
@@ -805,7 +839,7 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
 
       ElementCountUsers.style.width = "100%"
       ElementCountUsers.style.position = "absolute"
-      ElementCountUsers.style.marginTop = "1.8rem"
+      ElementCountUsers.style.marginTop = "1.2rem"
 
       if(NumberIdenti == 1){
 
@@ -838,27 +872,4 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
         }
         
       }
-}
-
-function CustomerAddStarRaiting(){
-
-  const CountStars = 5,
-  ContainerStars = document.querySelector("#container-elements-stars");
-
-  for(let i = 0; i < CountStars; i++){
-
-      const ElementStar = document.createElement("a");
-
-      ElementStar.classList.add("col");
-
-      ElementStar.innerHTML = `
-        <span class="material-symbols-outlined" style="font-size: 0.92rem; color: white">
-            grade
-        </span>
-      `
-
-      ContainerStars.appendChild(ElementStar)
-
-  }
-
 }

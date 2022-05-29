@@ -267,7 +267,7 @@ var routes = [
 
           AddComment(keyItem)
 
-          CustomerAddStarRaiting()
+          CustomerAddStarRaiting(keyCategory, keyItem)
 
           var swiper = app.swiper.create('.swiper-comments', {
             speed: 400,

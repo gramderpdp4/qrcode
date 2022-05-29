@@ -10,9 +10,11 @@ function StarsItem(KeyItem, KeyCategory){
             const AllStars = data.val(),
             KeysStars = Object.keys(AllStars);
 
+            ContainerStars.innerHTML = ""
+
             KeysStars.forEach(KeyStar => {
                 const CustomerStar = AllStars[KeyStar].stars,
-                nameCustomer = 'Usuário';
+                nameCustomer = AllStars[KeyStar].name_customer;
 
                 let CountAllStars = 0,
                 CountCustomersStars = 0;
@@ -33,7 +35,12 @@ function StarsItem(KeyItem, KeyCategory){
                 Text.classList.add("message-text")
                 Row.classList.add("row")
 
-                Name.innerText = nameCustomer
+                if(nameCustomer != undefined){
+                    Name.innerText = nameCustomer
+                }else{
+                    Name.innerText = "Visitante sem nome"
+                }
+
                 Avatar.innerHTML = `
                 <span class="material-symbols-outlined">
                 account_circle
@@ -72,5 +79,74 @@ function StarsItem(KeyItem, KeyCategory){
 
         }
     })
+}
+
+
+function CustomerAddStarRaiting(KeyCategory, KeyItem){
+
+    const CountStars = 5,
+    Category = KeyCategory,
+    Item = KeyItem,
+    ContainerStars = document.querySelector("#container-elements-stars");
+    
+    let NumberStar = 0;
+  
+    for(let i = 0; i < CountStars; i++){
+  
+        const ElementStar = document.createElement("a");
+  
+        ElementStar.classList.add("col");
+
+        NumberStar++
+  
+        ElementStar.innerHTML = `
+          <span class="material-symbols-outlined" style="font-size: 0.92rem; color: white">
+              grade
+          </span>
+        `
+
+        ElementStar.setAttribute("onclick", "CustomerSetStart('"+NumberStar+"', '"+Category+"', '"+Item+"')")
+  
+        ContainerStars.appendChild(ElementStar)
+  
+    }
+  }
+
+
+  
+  function CustomerSetStart(Number, KeyCategory, KeyItem){
+
+    const AddStars = db.ref("/restaurants/"+ KeyRestaurant + "/categories/" + KeyCategory + "/menu/" + KeyItem + "/stars")
+
+    let array_add_star = {
+        customerKey: GetKeyCustomer,
+        stars: Number,
+        name_customer: GetNameCustomer,
+        key_category: KeyCategory,
+        key_item: KeyItem
+    }
+
+    AddStars.push(array_add_star)
+        .then(success => {
+
+            const toast = app.toast.create({
+                text: "Avaliação publicada",
+                closeTimeout: 2000
+            })
+
+            toast.open()
+
+        })
+        .catch(error => {
+
+            const toast = app.toast.create({
+                text: "Houve um erro ao inserir sua avaliação",
+                closeTimeout: 2000
+            })
+
+            toast.open()
+
+        })
 
 }
+  
