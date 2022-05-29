@@ -389,7 +389,9 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             const ElementScrollTop = ElementScroll.scrollTop,
             CalculatedOpacityEffect = 100 / (Number(ElementScrollTop) + ElementScrollTop * 2),
             OpacityEffect = CalculatedOpacityEffect.toFixed(1),
-            CalculatedScrollNavbar = ElementScrollTop / 2;
+            CalculatedScrollNavbar = ElementScrollTop / 1.3;
+
+            console.log(CalculatedScrollNavbar)
 
             if(LastScrolled >= ElementScrollTop){
 
