@@ -838,5 +838,27 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
         }
         
       }
+}
+
+function CustomerAddStarRaiting(){
+
+  const CountStars = 5,
+  ContainerStars = document.querySelector("#container-elements-stars");
+
+  for(let i = 0; i < CountStars; i++){
+
+      const ElementStar = document.createElement("a");
+
+      ElementStar.classList.add("col");
+
+      ElementStar.innerHTML = `
+        <span class="material-symbols-outlined" style="font-size: 0.92rem; color: white">
+            grade
+        </span>
+      `
+
+      ContainerStars.appendChild(ElementStar)
+
+  }
 
 }

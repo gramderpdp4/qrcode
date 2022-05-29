@@ -261,11 +261,13 @@ var routes = [
           const keyItem = e.route.params.key,
           keyCategory = e.route.params.keycategory;
 
-          GetComments()
+          GetComments(keyItem)
 
           StarsItem(keyItem, keyCategory)
 
           AddComment(keyItem)
+
+          CustomerAddStarRaiting()
 
           var swiper = app.swiper.create('.swiper-comments', {
             speed: 400,

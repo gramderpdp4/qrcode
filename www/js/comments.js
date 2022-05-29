@@ -1,6 +1,6 @@
-function GetComments(){
+function GetComments(KeyItem){
 
-    const Comments = db.ref("/restaurants/" + KeyRestaurant + "/comments/"),
+    const Comments = db.ref("/restaurants/" + KeyRestaurant + "/comments/").orderByChild("key_item").equalTo(KeyItem),
     ContainerMessages = document.querySelector("#messages-container");
 
     Comments.on("value", (data) => {
@@ -52,6 +52,7 @@ function GetComments(){
 
         }else{
 
+            ContainerMessages.innerHTML = `<p style="text-align: center; position: relative; padding-top: 1rem"> Seja o primeiro a comentar </p>`
 
         }
 
@@ -150,39 +151,6 @@ function StepOpenComments(Number){
 
     ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
 
-    ElementsScroll.forEach(ElementScroll => {
-
-        ElementScroll.addEventListener("scroll", (e) => {
-
-            const ElementScrollTop = ElementScroll.scrollTop,
-            ElementClientHeight = ElementScroll.clientHeight,
-            ElementScrollHeight = ElementScroll.scrollHeight;
-      
-            if(ElementScrollTop){
-
-                console.log(ElementScrollTop)
-      
-              if(ElementScrollTop < 25){
-      
-                if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-      
-                  ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
-      
-                }
-      
-              }else if(ElementScrollTop == 0 || ElementScrollTop > 25){
-      
-                if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-      
-                  ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-      
-                }
-               
-              }
-            }
-          })
-    })
- 
 }
 
 function StepCloseComments(){
@@ -198,12 +166,13 @@ function StepCloseComments(){
 
     const ButtonSendComment = document.querySelector(".button-send-comment");
 
+    ElementStep.classList.add("sheet-modal-swipe-step")
+
     if(ButtonSendComment){
 
         ButtonSendComment.parentNode.parentNode.parentNode.remove()
         ElementTxtInput.setAttribute("readonly", "readonly")
         ElementTxtInput.setAttribute("disabled", "disabled")
-        ElementStep.classList.add("sheet-modal-swipe-step")
 
     }
 

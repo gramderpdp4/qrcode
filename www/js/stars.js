@@ -68,7 +68,7 @@ function StarsItem(KeyItem, KeyCategory){
 
         }else{
 
-            alert("Nada")
+            ContainerStars.innerHTML = `<p style="text-align: center; position: relative; padding-top: 1rem"> Seja o primeiro a avaliar </p>`
 
         }
     })
