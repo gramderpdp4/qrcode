@@ -387,12 +387,8 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           ElementScroll.addEventListener("scroll", (e) => {
 
             const ElementScrollTop = ElementScroll.scrollTop,
-            CalculatedOpacityEffect = 100 / (Number(ElementScrollTop) + ElementScrollTop * 2),
-            OpacityEffect = CalculatedOpacityEffect.toFixed(1),
-            CalculatedScrollNavbar = ElementScrollTop / 1.3;
-
-            console.log(CalculatedScrollNavbar)
-
+            CalculatedOpacityEffect = 100 / (Number(ElementScrollTop) + ElementScrollTop * 5),
+            CalculatedScrollNavbar = ElementScrollTop * 1.7;
             if(LastScrolled >= ElementScrollTop){
 
               if(CalculatedScrollNavbar < 150){
@@ -404,10 +400,15 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
   
                 if(CalculatedScrollNavbar == 0){
                   ElementNavbar.style.opacity = 1
-                 
+                  ElementNavbar.style.transform = "scale(1, 1 ,1)"
                 }else{
                   ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
                   
+                }
+
+                
+                if(CalculatedOpacityEffect <= 1 && CalculatedOpacityEffect >= 0){
+                  ElementNavbar.style.transform = `scale(${CalculatedOpacityEffect})`
                 }
 
               }
@@ -424,6 +425,10 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
                 })
   
                 ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
+
+                if(CalculatedOpacityEffect <= 1 && CalculatedOpacityEffect >= 0){
+                  ElementNavbar.style.transform = `scale(${CalculatedOpacityEffect})`
+                }
 
               }
 
