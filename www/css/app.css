@@ -1301,10 +1301,6 @@ animation: f7-cover-prev-to-current 450ms forwards;
   font-size: 1.2rem;
 }
 
-.container__style li{
-  border-bottom: 1px solid #303030;
-}
-
 .tab-link-active{
   background-color:#303030;
   border-radius: 8px;
@@ -1388,7 +1384,7 @@ h6{
 
 .swiper-comments .swiper-pagination {
   text-align: left;
-  bottom: 83.5% !important;
+  bottom: 81% !important;
   display: flex;
   width: 100vw;
   justify-content: center;
@@ -1455,4 +1451,8 @@ h6{
   color: black;
   border-radius: 6px !important;
   font-weight: bold !important;
+}
+
+.customer_name{
+  font-size: 0.85rem;
 }
