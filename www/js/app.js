@@ -708,7 +708,7 @@ function ItensSearch(){
                   CalculatedPercent = ( 100 / CalculatedStars )
 
                   if(CalculatedPercent != undefined && CalculatedPercent != NaN){
-                    CalculatorStart(CalculatedPercent, Row, CountCustomersStars)
+                    CalculatorStart(CalculatedPercent, Row, CountCustomersStars, 1)
                     ElementCountStars = parseInt(CalculatedPercent)
                   }
                 }
@@ -742,31 +742,31 @@ function ItensSearch(){
       })
 }
 
-function CalculatorStart(CalculatedPercent, Container, CountCustomers){
+function CalculatorStart(CalculatedPercent, Container, CountCustomers, NumberIdenti){
   if(CalculatedPercent <= 20){
 
-    AddStars(1, Container, CountCustomers)                    
+    AddStars(1, Container, CountCustomers, NumberIdenti)                    
 
   }else if(CalculatedPercent >= 21 && CalculatedPercent <= 40){
 
-    AddStars(2, Container, CountCustomers)  
+    AddStars(2, Container, CountCustomers, NumberIdenti)  
 
   }else if(CalculatedPercent >= 41 && CalculatedPercent <= 59){
 
-    AddStars(3, Container, CountCustomers)  
+    AddStars(3, Container, CountCustomers, NumberIdenti)  
     
   }else if(CalculatedPercent >= 60 && CalculatedPercent <= 80){
 
-    AddStars(4, Container, CountCustomers)  
+    AddStars(4, Container, CountCustomers, NumberIdenti)  
 
   }else if(CalculatedPercent >= 81 && CalculatedPercent <= 100){
 
-    AddStars(5, Container, CountCustomers)  
+    AddStars(5, Container, CountCustomers, NumberIdenti)  
 
   }
 }
 
-function AddStars(CountStars, ContainerElement, CountUsers){
+function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
 
   const Stats = CountStars
 
@@ -807,19 +807,36 @@ function AddStars(CountStars, ContainerElement, CountUsers){
       ElementCountUsers.style.position = "absolute"
       ElementCountUsers.style.marginTop = "1.8rem"
 
-      if(CountUsers != 0){
+      if(NumberIdenti == 1){
 
-        ElementCountUsers.innerText = `${CountUsers} avaliações`
-      
-        ContainerElement.appendChild(ElementCountUsers)
+        if(CountUsers != 0){
 
-      }else
-      {
+          ElementCountUsers.innerText = `${CountUsers} avaliações`
+        
+          ContainerElement.appendChild(ElementCountUsers)
+  
+        }else
+        {
+  
+          ElementCountUsers.innerText = "Seja o primeiro a avaliar"
+        
+          ContainerElement.appendChild(ElementCountUsers)
+  
+        }
 
-        ElementCountUsers.innerText = "Seja o primeiro a avaliar"
-      
-        ContainerElement.appendChild(ElementCountUsers)
+      }else{
 
+        if(CountUsers != 0){
+
+          ContainerElement.appendChild(ElementCountUsers)
+  
+        }else
+        {
+        
+          ContainerElement.appendChild(ElementCountUsers)
+  
+        }
+        
       }
 
 }

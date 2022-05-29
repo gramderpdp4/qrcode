@@ -139,7 +139,7 @@ function StepOpenComments(Number){
     const ElementStep = document.querySelector(".sheet-scrolled"),
     ElementContent = ElementStep.querySelector(".page-content-comments"),
     ElementBlock = document.querySelector(".page-block-comments"),
-    ElementScroll = document.querySelector(".messages"),
+    ElementsScroll = document.querySelectorAll(".scrolled-container"),
     ElementDisabledScroll = document.querySelector(".sheet-scrolled"),
     ElementList = document.querySelector(".list-comment ul form"),
     ElementTxtInput = document.querySelector(".input_txt_comment");
@@ -150,57 +150,39 @@ function StepOpenComments(Number){
 
     ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
 
-    ElementScroll.addEventListener("scroll", (e) => {
+    ElementsScroll.forEach(ElementScroll => {
 
-      const ElementScrollTop = ElementScroll.scrollTop,
-      ElementClientHeight = ElementScroll.clientHeight,
-      ElementScrollHeight = ElementScroll.scrollHeight;
+        ElementScroll.addEventListener("scroll", (e) => {
 
-      if(ElementScrollTop){
+            const ElementScrollTop = ElementScroll.scrollTop,
+            ElementClientHeight = ElementScroll.clientHeight,
+            ElementScrollHeight = ElementScroll.scrollHeight;
+      
+            if(ElementScrollTop){
 
-        console.log(ElementScrollTop)
-
-        if(ElementScrollTop < 25){
-
-          if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-
-            ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
-
-          }
-
-        }else if(ElementScrollTop == 0 || ElementScrollTop > 25){
-
-          if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
-
-            ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-
-          }
-         
-        }
-      }
+                console.log(ElementScrollTop)
+      
+              if(ElementScrollTop < 25){
+      
+                if(!ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+      
+                  ElementDisabledScroll.classList.add("sheet-modal-swipe-step")
+      
+                }
+      
+              }else if(ElementScrollTop == 0 || ElementScrollTop > 25){
+      
+                if(ElementDisabledScroll.classList.contains("sheet-modal-swipe-step")){
+      
+                  ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
+      
+                }
+               
+              }
+            }
+          })
     })
-
-    
-    ElementTxtInput.removeAttribute("readonly")
-    ElementTxtInput.removeAttribute("disabled")
-
-    const ButtonSendComment = document.querySelector(".button-send-comment");
-
-    if(!ButtonSendComment){
-
-        const InputSend = `
-        <li class="item-content item-input">
-            <div class="item-inner">
-                <div class="item-input-wrap">
-                <input type="submit" class="button button-fill button-small button-send-comment" value="Publicar comentário" />
-                </div>
-            </div>
-        </li>
-        `
-
-        ElementList.insertAdjacentHTML("beforeend", InputSend)
-
-    }
+ 
 }
 
 function StepCloseComments(){

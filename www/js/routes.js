@@ -221,7 +221,7 @@ var routes = [
     } 
   },
   {
-    path: '/comments/key/:key/',
+    path: '/comments/key/:key/keycategory/:keycategory/',
     sheet: {
       backdrop: false,
       backdropEl: false,
@@ -232,11 +232,13 @@ var routes = [
           // App instance
           var app = router.app;
 
-          let key = to.params.key;
+          let key = to.params.key,
+          keycategory = to.params.keycategory;
 
           // We got user data from request
           var user = {
-            key: key
+            key: key,
+            keycategory: keycategory
           };
           // Hide Preloader
           app.preloader.hide();
@@ -256,9 +258,12 @@ var routes = [
       on: {
         open: function(e){
 
-          const keyItem = e.route.params.key;
+          const keyItem = e.route.params.key,
+          keyCategory = e.route.params.keycategory;
 
           GetComments()
+
+          StarsItem(keyItem, keyCategory)
 
           AddComment(keyItem)
 

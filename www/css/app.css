@@ -1384,7 +1384,7 @@ h6{
 
 .swiper-comments .swiper-pagination {
   text-align: left;
-  bottom: 81% !important;
+  bottom: 79.5% !important;
   display: flex;
   width: 100vw;
   justify-content: center;
@@ -1439,7 +1439,7 @@ h6{
   padding: 0.4rem;
 }
 
-.page-block-comments, .messages{
+.page-block-comments, .scrolled-container, .page-block-stars{
   height: 100% !important;
   padding-bottom: 15rem;
   position: relative;
