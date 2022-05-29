@@ -400,7 +400,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
   
                 if(CalculatedScrollNavbar == 0){
                   ElementNavbar.style.opacity = 1
-                  ElementNavbar.style.transform = "scale(1, 1 ,1)"
+                  ElementNavbar.style.transform = "scale(1)"
                 }else{
                   ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
                   
