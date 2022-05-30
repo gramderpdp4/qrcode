@@ -1474,9 +1474,13 @@ h6{
   padding-bottom: 0.5rem;
 }
 
-.animation-scrolled{
+.animation-scrolled-hidden{
 
-  transform: var(--animation-scrolled);
-  will-change: transform;
+  transform: translateY(-150%)
 
+}
+
+
+.animation-scrolled-hidden-text{
+  transform: translateY(-290%)
 }

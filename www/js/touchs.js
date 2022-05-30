@@ -1,17 +1,28 @@
 
 function TouchMove(Event, Element, Navbar, Subnavbar){
 
-    const ElementScrollTop = Element.scrollTop * 2;
+  const ElementTxt = Element.previousElementSibling;
 
-        if(ElementScrollTop <= 165 && ElementScrollTop >= 0){
-            document.documentElement.style.setProperty('--animation-scrolled', `translateY(-${ElementScrollTop}%)`);
+  if(Element.scrollTop > 15){
 
-            if(!Subnavbar.classList.contains("animation-scrolled")){
+    if(!Subnavbar.classList.contains("animation-scrolled-hidden")){
 
-                Subnavbar.classList.add("animation-scrolled")
-                Navbar.classList.add("animation-scrolled")
+        Subnavbar.classList.add("animation-scrolled-hidden")
+        Navbar.classList.add("animation-scrolled-hidden")
+        ElementTxt.classList.add("animation-scrolled-hidden-text")
+        Element.style.marginTop = "1.3rem"
+    
+    }
+  }else{
 
-            }          
-        } 
+    if(Subnavbar.classList.contains("animation-scrolled-hidden")){
 
+        Subnavbar.classList.remove("animation-scrolled-hidden")
+        Navbar.classList.remove("animation-scrolled-hidden")
+        ElementTxt.classList.remove("animation-scrolled-hidden-text")
+        Element.style.marginTop = "5.2rem"
+    
+    }
+
+  }
 }
