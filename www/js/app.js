@@ -373,7 +373,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 
                       
         const ElementsScroll = document.querySelectorAll(".container-items"),
-        ElementNavbar = document.querySelector(".title-large-text"),
+        ElementNavbar = document.querySelector(".title-large"),
         SubnavbarHome = document.querySelector(".navbar .subnavbar");
 
         ElementsScroll.forEach(ElementScroll => {

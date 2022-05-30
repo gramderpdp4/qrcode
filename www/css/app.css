@@ -9,7 +9,7 @@
   --f7-card-content-padding-horizontal: 16px;
   --f7-card-content-padding-vertical: 16px;
   --f7-card-border-radius: 4px;
-  --animation-scrolled: 0px;
+  --animation-scrolled: translateY(0px);
   --f7-card-font-size: inherit;
   --f7-card-header-text-color: inherit;
   --f7-card-header-font-weight: 400;
@@ -1476,20 +1476,7 @@ h6{
 
 .animation-scrolled{
 
-  animation: Animationss 0.7s both;
+  transform: var(--animation-scrolled);
   will-change: transform;
 
-}
-
-@keyframes Animationss {
-    0% {
-
-      transform: translateY(var(--animation-scrolled));
-
-    }
-    100% {
-
-      transform: translateY(var(--animation-scrolled));
-
-    }
 }
