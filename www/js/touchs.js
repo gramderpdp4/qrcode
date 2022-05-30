@@ -1,7 +1,7 @@
 
 function TouchMove(Event, Element, Navbar, Subnavbar){
 
-    const ElementScrollTop = Element.scrollTop;
+    const ElementScrollTop = Element.scrollTop * 2;
 
         if(ElementScrollTop <= 165 && ElementScrollTop >= 0){
             document.documentElement.style.setProperty('--animation-scrolled', `translateY(-${ElementScrollTop}%)`);
