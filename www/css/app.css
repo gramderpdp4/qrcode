@@ -9,6 +9,7 @@
   --f7-card-content-padding-horizontal: 16px;
   --f7-card-content-padding-vertical: 16px;
   --f7-card-border-radius: 4px;
+  --animation-scrolled: 0px;
   --f7-card-font-size: inherit;
   --f7-card-header-text-color: inherit;
   --f7-card-header-font-weight: 400;
@@ -1355,6 +1356,7 @@ h6{
 
 .page-content{
   overflow-y: scroll !important;
+
 }
 
 .container-items{
@@ -1470,4 +1472,24 @@ h6{
 
 .list-stars ul{
   padding-bottom: 0.5rem;
+}
+
+.animation-scrolled{
+
+  animation: Animationss 0.7s both;
+  will-change: transform;
+
+}
+
+@keyframes Animationss {
+    0% {
+
+      transform: translateY(var(--animation-scrolled));
+
+    }
+    100% {
+
+      transform: translateY(var(--animation-scrolled));
+
+    }
 }

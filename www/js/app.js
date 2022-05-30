@@ -378,19 +378,10 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 
         ElementsScroll.forEach(ElementScroll => {
 
-          const ParentElement = ElementScroll.parentElement;
-
-          let CountScroll = 0;
-
-          let LastScrolled = 0;
-
           ElementScroll.addEventListener("touchmove", (e) => {
             TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
           })
 
-          ElementScroll.addEventListener("touchend", (e) => {
-            TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
-          })
          
         })
 
