@@ -378,7 +378,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 
         ElementsScroll.forEach(ElementScroll => {
 
-          ElementScroll.addEventListener("touchmove", (e) => {
+          ElementScroll.addEventListener("scroll", (e) => {
             TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
           })
 
