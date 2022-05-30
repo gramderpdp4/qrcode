@@ -374,7 +374,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
                       
         const ElementsScroll = document.querySelectorAll(".container-items"),
         ElementNavbar = document.querySelector(".title-large-text"),
-        SubnavbarHome = $(".navbar .subnavbar");
+        SubnavbarHome = document.querySelector(".navbar .subnavbar");
 
         ElementsScroll.forEach(ElementScroll => {
 
@@ -384,56 +384,14 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 
           let LastScrolled = 0;
 
-          ElementScroll.addEventListener("scroll", (e) => {
-
-            const ElementScrollTop = ElementScroll.scrollTop,
-            CalculatedOpacityEffect = 100 / (Number(ElementScrollTop) + ElementScrollTop * 5),
-            CalculatedScrollNavbar = ElementScrollTop * 1.7;
-            if(LastScrolled >= ElementScrollTop){
-
-              if(CalculatedScrollNavbar < 150){
-
-                SubnavbarHome.css({
-                  transform: `translateY(-${CalculatedScrollNavbar}%)`,
-                  "transition-timing-function": "ease-in-out"
-                })
-  
-                if(CalculatedScrollNavbar == 0){
-                  ElementNavbar.style.opacity = 1
-                  ElementNavbar.style.transform = "scale(1)"
-                }else{
-                  ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
-                  
-                }
-
-                
-                if(CalculatedOpacityEffect <= 1 && CalculatedOpacityEffect >= 0){
-                  ElementNavbar.style.transform = `scale(${CalculatedOpacityEffect})`
-                }
-
-              }
-              
-            }else{
-
-              LastScrolled = ElementScrollTop
-                         
-              if(CalculatedScrollNavbar < 150){
-
-                SubnavbarHome.css({
-                  "transform": `translateY(-${CalculatedScrollNavbar}%)`,
-                  "transition-timing-function": "ease-in-out"
-                })
-  
-                ElementNavbar.style.opacity = `${CalculatedOpacityEffect}`
-
-                if(CalculatedOpacityEffect <= 1 && CalculatedOpacityEffect >= 0){
-                  ElementNavbar.style.transform = `scale(${CalculatedOpacityEffect})`
-                }
-
-              }
-
-            }
+          ElementScroll.addEventListener("touchmove", (e) => {
+            TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
           })
+
+          ElementScroll.addEventListener("touchend", (e) => {
+            TouchEnd(e, ElementScroll, ElementNavbar, SubnavbarHome)
+          })
+         
         })
 
       }
