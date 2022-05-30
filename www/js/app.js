@@ -389,7 +389,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           })
 
           ElementScroll.addEventListener("touchend", (e) => {
-            TouchEnd(e, ElementScroll, ElementNavbar, SubnavbarHome)
+            TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
           })
          
         })

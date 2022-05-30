@@ -1353,6 +1353,10 @@ h6{
   z-index: 1001;
 }
 
+.page-content{
+  overflow-y: scroll !important;
+}
+
 .container-items{
   overflow-y: scroll;
   margin-bottom: 10rem;

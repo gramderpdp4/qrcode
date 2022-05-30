@@ -2,13 +2,11 @@ function TouchEnd(Event, Element, Navbar, Subnavbar){
 
     const ElementScrollTop = Element.scrollTop;
 
-    console.log(ElementScrollTop)
-
 }
 
 function TouchMove(Event, Element, Navbar, Subnavbar){
 
-    const ElementScrollTop = Element.scrollTop * 5;
+    const ElementScrollTop = Element.scrollTop;
 
     let StateScrolled = 0
 
@@ -19,7 +17,6 @@ function TouchMove(Event, Element, Navbar, Subnavbar){
             Subnavbar.style.transform = `translateY(${-ElementScrollTop}%)`
             Navbar.style.transform = `translateY(${-ElementScrollTop}%)`
 
-  
         }
     }
 
