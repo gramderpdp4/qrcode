@@ -90,7 +90,6 @@ async function CreateNavbar(Logo, ColorSecundary, ColorPrimary, Key){
   const NavbarCreate = `
     <div class="navbar-bg" style="background-color: none; background: none"></div>
     <div class="navbar-inner sliding" style="background-color: #212121 !important">
-      <div class="title text-updt" style="color: #ffffff">Especialidades da casa</div>
       <div class="subnavbar subnavbar-home">
       <form class="searchbar">
         <div class="searchbar-inner">
@@ -374,12 +373,13 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
                       
         const ElementsScroll = document.querySelectorAll(".container-items"),
         ElementNavbar = document.querySelector(".title-large"),
-        SubnavbarHome = document.querySelector(".navbar .subnavbar");
+        SubnavbarHome = document.querySelector(".navbar .subnavbar"),
+        ElementNavbarParent = document.querySelector(".navbar");
 
         ElementsScroll.forEach(ElementScroll => {
           
           ElementScroll.addEventListener("scroll", (e) => {
-            TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome)
+            TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome, ElementNavbarParent)
           })
 
          

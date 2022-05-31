@@ -1354,16 +1354,24 @@ h6{
   z-index: 1001;
 }
 
-.page-content{
-  overflow-y: scroll !important;
+.p1-container-full .page-content{
+  overflow-y: hidden;
+  padding-bottom: 5rem;
+}
 
+.p1-container-full .navbar{
+  height: 10rem;
+}
+
+.navbar .subnavbar, .title-large, .navbar{
+  transition: all 150ms !important;
 }
 
 .container-items{
+  margin-bottom: 10rem !important;
+  height: 100%;
+  margin-top: 15vh;
   overflow-y: scroll;
-  margin-bottom: 10rem;
-  height: 120%;
-  margin-top: 5.2rem;
 }
 
 .page-content{
@@ -1483,4 +1491,8 @@ h6{
 
 .animation-scrolled-hidden-text{
   transform: translateY(-290%)
+}
+
+.navbar .subnavbar{
+  top: 3.5rem;
 }
