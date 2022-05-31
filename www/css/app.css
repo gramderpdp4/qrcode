@@ -1493,6 +1493,6 @@ h6{
   transform: translateY(-290%)
 }
 
-.navbar .subnavbar{
+.navbar-home .subnavbar{
   top: 3.5rem;
 }
