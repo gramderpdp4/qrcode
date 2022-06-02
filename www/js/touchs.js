@@ -12,7 +12,8 @@ function TouchMove(Event, Element, Navbar, Subnavbar, NavbarParent){
         Element.style.marginTop = "1.3rem"
 
         $(".p1-container-full .navbar").css({
-          "height": "7rem"
+          "height": "5.6rem",
+          "box-shadow": "var(--f7-navbar-shadow-image)"
         })
     
     }

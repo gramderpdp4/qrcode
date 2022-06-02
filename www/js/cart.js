@@ -68,7 +68,7 @@ async function ReturnCartItens(){
                 Deleted.innerHTML = `
                 <a onclick="DeleteItemCart('${Key}', '${name}')">
                     <span style="color: #d63031" class="material-symbols-outlined">
-                    backspace
+                    cancel
                     </span>
                 <a>
                 `
@@ -289,7 +289,7 @@ function CreateContainerFinished(Code, CalculatedPrice){
                         <div class="toolbar toolbar-bottom" style="height: 7rem; background: var(--f7-navbar-shadow-image); background: var(--p1-bg-color-secundary);">
                             <div class="toolbar-inner" style="display: initial; padding: 1rem">
                             <p style="color: white; font-size: 1.5rem" id="container-calculated-price"></p>
-                            <button style="margin-top: 0.5rem;" class="button button-fill">Finalizar pedido</button>
+                            <button style="margin-top: 0.5rem;" class="button button-fill button-finished-order">Fazer pedido</button>
                             </div>
                         </div>
                         `;    

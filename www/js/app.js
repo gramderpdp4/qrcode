@@ -324,13 +324,16 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             Col = document.createElement("div"),
             P = document.createElement("p"),
             Pprice = document.createElement("p"),
+            Favorite = document.createElement("a"),
             Button = document.createElement("button"),
             CardFooter = document.createElement("div");
+
             Card.classList.add("card")
             Col.classList.add("col")
             CardHeader.classList.add("card-header", "align-items-flex-end")
             CardContent.classList.add("card-content", "card-content-padding")
             Button.classList.add("button", "button-fill")
+            Favorite.classList.add("favorite-button")
 
             CardHeader.style.backgroundImage = `url(${image})`
             Button.setAttribute("onclick", "AddToCart('"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+image+"')")
@@ -341,6 +344,10 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             Col.style.margin = "0.2rem"
             Pprice.style.fontSize = "1.1rem"
 
+            Favorite.innerHTML = `
+            <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>            `
+
+            Favorite.setAttribute("onclick", "addFavorite(this, '"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+image+"')")
             CardHeader.setAttribute("onclick", "ItemPage('"+KeyMenuItem+"', '"+res.tab_key+"')")
 
             P.innerText = name
@@ -358,6 +365,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             CardContent.appendChild(Button)
             Card.appendChild(CardHeader)
             Card.appendChild(CardContent)
+            Card.appendChild(Favorite)
 
             Col.appendChild(Card)
 
@@ -497,10 +505,12 @@ async function AddToCart(Key, Name, Price, Image){
     if(data.exists()){
       
       const toast = app.toast.create({
-        text: `${Name} já está no seu carrinho`,
+        text: `<span class="material-symbols-outlined info-icon">
+        info
+        </span> &nbsp; ${Name} já está no seu carrinho`,
         closeButton: true,
         closeButtonText: "Ok",
-        closeButtonColor: "blue"
+        closeButtonColor: "blue",
       })
 
       toast.open()
@@ -523,8 +533,13 @@ async function AddToCart(Key, Name, Price, Image){
           .then(success => {
   
             const toast = app.toast.create({
-              text: `${Name} foi adicionado`,
-              closeTimeout: 2500
+              text: `<span class="material-symbols-outlined success-icon">
+              check_circle
+              </span> &nbsp; ${Name} foi adicionado`,
+              closeButton: true,
+              closeButtonText: "Ok",
+              closeButtonColor: "blue",
+              cssClass: 'toast-cart'
             })
   
             toast.open()
@@ -828,4 +843,72 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
         }
         
       }
+}
+
+
+function addFavorite(Element, ItemKey, Name, Price, Image){
+
+  const Favorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/"),
+  ItemExists = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/").orderByChild("key_item").equalTo(ItemKey);
+
+  ItemExists.once("value", (data) => {
+
+    if(data.exists()){
+
+      const Key = Object.keys(data.val());
+
+      const RemoveFavorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/" + Key);
+
+      RemoveFavorite.remove()
+        .then(success => {
+
+          Element.innerHTML = `
+          <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>
+          `
+          
+          const toast = app.toast.create({
+            text: `${Name} removido dos favoritos`,
+            closeTimeout: 2000
+          })
+    
+          toast.open()
+
+        })
+        .catch(error => [
+
+        ])
+
+    }else{
+
+      let array_favorite = {
+        key_item: ItemKey,
+        image: Image,
+        name: Name,
+        price: Price,
+      }
+    
+      Favorite.push(array_favorite)
+        .then(success => {
+
+          Element.innerHTML = `
+          <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85Z"/></svg>
+          `
+
+          const toast = app.toast.create({
+            text: `${Name} adicionado ao favoritos`,
+            closeButton: true,
+            closeButtonText: "Ok",
+            closeButtonColor: "blue",
+          })
+    
+          toast.open()
+
+        })
+        .catch(error => {
+          
+        })
+
+    }
+
+  })
 }

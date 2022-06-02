@@ -1273,8 +1273,9 @@ animation: f7-cover-prev-to-current 450ms forwards;
 
 .card-header{
   min-height: 8rem !important;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  z-index: 1;
 }
 
 .card-content p {
@@ -1490,9 +1491,52 @@ h6{
 
 
 .animation-scrolled-hidden-text{
-  transform: translateY(-290%)
+  transform: translateY(-400%)
 }
 
 .navbar-home .subnavbar{
   top: 3.5rem;
 }
+
+.success-icon{
+  color: #16a085;
+  top: 0.3rem;
+  position: relative;
+}
+
+.info-icon{
+  color: #d35400;
+  top: 0.3rem;
+  position: relative;
+}
+
+.toast-cart .toast-button{
+  color: var(--p1-bg-color-primary) !important;
+  font-weight: bold !important;
+}
+
+
+.button-finished-order{
+  background-color: var(--p1-bg-color-primary) !important;
+  color: #000000 !important;
+  font-weight: bold;
+}
+
+.fab-waiter{
+  bottom: 4.7rem !important;
+}
+
+.fab-waiter a{
+  border-radius: 6px;
+}
+
+.favorite-button{
+  top: 0.2rem;
+  position: absolute;
+  margin-top: 0px;
+  float: right;
+  z-index: 100;
+  left: 83%;
+  color: var(--p1-bg-color-primary);
+}
+
