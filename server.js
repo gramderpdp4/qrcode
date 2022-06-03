@@ -58,30 +58,18 @@ const db = adminFirebase.database()
 const EncryptedPassword = "PlayUmEncryptedAes256And20220521Password",
 EncryptedEmail = "PlayUmEncryptedAes256And2114"
 
+const Ref = db.ref("/restaurants/-N1Gm7qGEIR0zbiDwnm1/configs/services/");
 
-const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                              
-      function generatePassword(length) {
-        let resultPassword = '';
-        const charactersLength = characters.length;
-        for ( let i = 0; i < length; i++ ) {
-          resultPassword += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-  
-        return resultPassword;
-      } 
-  
-const Table = db.ref("/restaurants/-N1Gm7qGEIR0zbiDwnm1/dice/tables"),
-MomentCreated = moment().tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm:ss");
-
-let Arr_user = {
-    created_at: MomentCreated,
-    number: 1,
-    code: 92817,
-    name: "Chimbras Pub:Mesa 1"
+let arr = {
+    code: 6,
+    status: true,
+    icon: `<span class="material-symbols-outlined">
+    table_bar
+    </span>`,
+    type: 'changedTable'
 }
 
-
+Ref.push(arr)
 //IDENTIFICA O RESTAURANTE PELO CÓDIGO, DO QR CODE
 
 app.post("/IdentifiesRestaurant", async (req, res) => {
@@ -290,26 +278,6 @@ app.post("/LoginUser", async (req, res) => {
 
 //LOGA CLIENTE
 
-const AllArchives = db.ref("/restaurants/");
-
-AllArchives.once("value", (data) => {
-
-    if(data.exists()){
-
-        const DataRestaurants = {
-            restaurants: [
-                data.val()
-            ]
-        }
-
-        const JsonFile = JSON.stringify(DataRestaurants)
-
-        fs.writeFile('datapaywallfirebase.json', JsonFile, 'utf8', Saved);
-        function Saved(){
-            console.log("saved success")
-        }
-    }
-})
 
 
 app.listen(port, () => {

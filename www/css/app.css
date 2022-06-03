@@ -1540,3 +1540,6 @@ h6{
   color: var(--p1-bg-color-primary);
 }
 
+.block-title{
+  color: white;
+}

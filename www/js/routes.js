@@ -307,12 +307,21 @@ var routes = [
   },
   },
   {
-    path: '/favoritos/',
-    componentUrl: './pages/favoritos.html',
+    path: '/favorites/',
+    transition: 'f7-cover',
+    componentUrl: './pages/favorites.html',
     on: {
       pageInit: function(){
-        returnFavorites()
+        
+        Favorites()
+
       }
+    }
+  },
+  {
+    path: '/popover-favorite/',
+    popover: {
+      url: './pages/popovers/popover-favorite.html'
     }
   },
   {
@@ -366,13 +375,13 @@ var routes = [
     url: './pages/user-page.html',
     on: {
       pageInit: function(){
-        let $mesa = sessionStorage.getItem("mkep1"),
-            $name_user = sessionStorage.getItem("user_name_login"),
-            $container_name = document.getElementById("name_user"),
-            $mesa__container = document.getElementById("mesa__atual");
+        const ContainerTable = document.querySelector("#mesa_atual"),
+        ContainerName = document.querySelector("#name_user");
 
-            $mesa__container.innerText = "Mesa atual " + $mesa
-            $container_name.innerText = $name_user
+        ContainerName.innerText = GetNameCustomer
+
+        CustomerPage()
+
       }
     }
   },

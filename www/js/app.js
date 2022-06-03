@@ -22,7 +22,8 @@ const auth = firebase.auth();
 let KeyRestaurant,
 KeyTable,
 GetKeyCustomer,
-GetNameCustomer;
+GetNameCustomer,
+NumberTable;
 
 async function CodeRestaurant(){
   const getUrl = window.location.href,
@@ -63,6 +64,7 @@ async function CodeRestaurant(){
                       CreateTabElementContainer()
                       .then(CompletedCreateTabContainer => {
                         CreateTabsPages(result.key_restaurant)
+                        CallWaiter()
                       })
 
                       if(CodeTable){
@@ -313,7 +315,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
         if(AllMenu != undefined){
           const KeysMenus = Object.keys(AllMenu);
 
-          KeysMenus.forEach((KeyMenuItem, IndiceMenu) => {
+          KeysMenus.forEach( async (KeyMenuItem, IndiceMenu) => {
             const name = AllMenu[KeyMenuItem].name,
             image = AllMenu[KeyMenuItem].image,
             price = AllMenu[KeyMenuItem].price;
@@ -344,10 +346,26 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             Col.style.margin = "0.2rem"
             Pprice.style.fontSize = "1.1rem"
 
-            Favorite.innerHTML = `
-            <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>            `
+            const CheckFavorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/").orderByChild("key_item").equalTo(KeyMenuItem);
 
-            Favorite.setAttribute("onclick", "addFavorite(this, '"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+image+"')")
+            await CheckFavorite.on("value", (FavoriteExists) => {
+
+              if(FavoriteExists.exists()){
+
+                Favorite.innerHTML = `
+                <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85Z"/></svg>
+                `
+
+              }else{
+
+                Favorite.innerHTML = `
+                <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>            `
+                
+              }
+
+            })
+
+            Favorite.setAttribute("onclick", "addFavorite(this, '"+KeyMenuItem+"', '"+name+"', '"+price+"', '"+image+"', '"+res.tab_key+"')")
             CardHeader.setAttribute("onclick", "ItemPage('"+KeyMenuItem+"', '"+res.tab_key+"')")
 
             P.innerText = name
@@ -452,7 +470,10 @@ async function SelectCustomerTable(CodeTable){
       
       DataKey.forEach((Key, Indice) => {
         const Code = DataTable[Key].code,
-        ItensCart = DataTable[Key].itens;
+        ItensCart = DataTable[Key].itens,
+        Name = DataTable[Key].name;
+
+        NumberTable = Name
 
         if(ItensCart != undefined){
           const ItensCartKeys = Object.keys(ItensCart);
@@ -846,7 +867,7 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
 }
 
 
-function addFavorite(Element, ItemKey, Name, Price, Image){
+function addFavorite(Element, ItemKey, Name, Price, Image, KeyCategory){
 
   const Favorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/"),
   ItemExists = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/").orderByChild("key_item").equalTo(ItemKey);
@@ -885,6 +906,7 @@ function addFavorite(Element, ItemKey, Name, Price, Image){
         image: Image,
         name: Name,
         price: Price,
+        key_category: KeyCategory
       }
     
       Favorite.push(array_favorite)
@@ -909,6 +931,114 @@ function addFavorite(Element, ItemKey, Name, Price, Image){
         })
 
     }
+  })
+}
 
+function CallWaiter(){
+
+  const Container = document.querySelector(".p1-container-full");
+
+  const HTML = `
+  <div class="fab fab-extended fab-right-bottom fab-waiter color-red">
+    <a href="#">
+      <span class="material-symbols-outlined">
+        room_service
+        </span>
+    </a>
+  </div>
+  `
+
+  Container.insertAdjacentHTML("beforeend", HTML)
+
+}
+
+function CustomerPage(){
+
+  const RestaurantConfigs = db.ref("/restaurants/" + KeyRestaurant + "/configs/services/"),
+  ContainerUserPage = document.querySelector("#list-user-page");
+
+  RestaurantConfigs.on("value", (data) => {
+
+    if(data.exists()){
+
+      const Data = data.val(),
+      Keys = Object.keys(Data).slice(0).reverse();
+
+      ContainerUserPage.innerHTML = ""
+
+      Keys.forEach(Key => {
+
+        const Type = Data[Key].type,
+        Code = Data[Key].code,
+        Icon = Data[Key].icon,
+        Status = Data[Key].status;
+        
+        const Li = document.createElement("li"),
+        A = document.createElement("a"),
+        Media = document.createElement("div"),
+        Inner = document.createElement("div"),
+        Title = document.createElement("div");
+  
+        A.classList.add("item-link", "item-content")
+        Media.classList.add("item-media")
+        Inner.classList.add("item-inner")
+        Title.classList.add("item-title")
+
+        Media.innerHTML = Icon
+
+        Inner.appendChild(Title)
+        A.appendChild(Media)
+        A.appendChild(Inner)
+        Li.appendChild(A)
+
+        switch (Code) {
+          case 2:
+
+            if(Status == true){
+  
+              Title.innerText = "Votação/Enquete"
+              ContainerUserPage.appendChild(Li) 
+
+            }
+            
+            break;
+            case 3:
+
+              if(Status == true){
+  
+                Title.innerText = "Mudar de mesa"
+                ContainerUserPage.appendChild(Li) 
+  
+              }
+            
+              break;
+              case 4:
+
+              if(Status == true){
+  
+                Title.innerText = "Notificações"
+                ContainerUserPage.appendChild(Li) 
+  
+              }
+            
+              break;
+              case 5:
+
+              if(Status == true){
+  
+                Title.innerText = "Favoritos"
+                A.href = "/favorites/"
+                ContainerUserPage.appendChild(Li) 
+  
+              }
+            
+              break;
+        
+          default:
+            break;
+        }
+      })
+           
+    }
   })
 }
