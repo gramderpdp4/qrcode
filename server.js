@@ -129,6 +129,7 @@ app.post("/CreateNewUser", async (req, res) => {
                    let Arr_insert_user = {
                        password: ResultUser[0].password,
                        name: ResultUser[1].name,
+                       shareCart: true,
                        secret_code: ResultUser[2].secret_code,
                        email: `${ResultUser[1].name.toString().replace(" ", "")}@gmail.com`
                    }
