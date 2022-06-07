@@ -69,7 +69,6 @@ let arr = {
     type: 'changedTable'
 }
 
-Ref.push(arr)
 //IDENTIFICA O RESTAURANTE PELO CÓDIGO, DO QR CODE
 
 app.post("/IdentifiesRestaurant", async (req, res) => {
@@ -259,12 +258,14 @@ app.post("/LoginUser", async (req, res) => {
            Key = Object.keys(Data),
            Name = Data[Key].name,
            Email = Data[Key].email,
+           ShareCart = Data[Key].shareCart,
            Password = Data[Key].password;
 
            res.send({
                name: Name,
                password: Password,
                email: Email,
+               shareCart: ShareCart,
                CustomerKey: Key
            })
 

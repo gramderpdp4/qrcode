@@ -245,7 +245,7 @@ var routes = [
 
           // Resolve route to load page
           resolve({
-                  url: './pages/sheet-comments.html',
+                  url: './pages/sheets/sheet-comments.html',
               }, {
                   props: {
                       user: user,
@@ -259,13 +259,43 @@ var routes = [
         open: function(e){
 
           const keyItem = e.route.params.key,
-          keyCategory = e.route.params.keycategory;
+          keyCategory = e.route.params.keycategory,
+          FormComment = document.forms.formComment,
+          ElementTxtInput = document.querySelector(".input_txt_comment");
+
+          FormComment.addEventListener("click", (e) => {
+            StepOpenComments()
+            ElementTxtInput.addEventListener("keyup", (e) => {
+
+              const ElementButtonSend = `
+              <a class="button-send-review ripple">
+                  <span class="material-symbols-outlined">
+                  send
+                  </span>
+              </a>
+              `
+      
+              if(ElementTxtInput.value.length > 3){
+                  const NextElement = ElementTxtInput.nextElementSibling;
+      
+                  if(!NextElement.classList.contains("button-send-review")){
+                      ElementTxtInput.insertAdjacentHTML("afterend", ElementButtonSend)
+                      AddComment(keyItem)
+                  }
+              }else{
+                  const NextElement = ElementTxtInput.nextElementSibling;
+      
+                  if(NextElement != null){
+                      if(NextElement.classList.contains("button-send-review"))
+                      NextElement.remove()
+                  }
+              }
+          })
+          })
 
           GetComments(keyItem)
 
           StarsItem(keyItem, keyCategory)
-
-          AddComment(keyItem)
 
           CustomerAddStarRaiting(keyCategory, keyItem)
 
@@ -322,6 +352,96 @@ var routes = [
     path: '/popover-favorite/',
     popover: {
       url: './pages/popovers/popover-favorite.html'
+    }
+  },
+  {
+    path: '/call-waiter/',
+    sheet: {
+      push: true,
+      swipeToClose: true,
+      url: './pages/sheets/call-waiter.html',
+      on: {
+        open: function(){
+          const ListWaiter = document.querySelectorAll(".list-waiter input"),
+          FormWaiter = document.forms.formWaiter,
+          FormWaiterUL = FormWaiter.querySelector("ul"),
+          DatabaseWaiter = firebase.database();
+
+          const SubmitElement = `
+          <li class="button-submit-li">
+            <div class="item-content">
+              <div class="item-inner">
+                <input class="button button-p1 button-fill button-small" type="submit" value="Chamar garçom"/>
+              </div>
+            </div>
+          </li>
+          `
+
+          let InputSelect;
+
+          ListWaiter.forEach(Input => {
+            Input.addEventListener("input", (e) => {
+              InputSelect = Input.value
+              if(InputSelect.length > 0){
+                const LastElement = FormWaiterUL.lastElementChild;
+                if(!LastElement.classList.contains("button-submit-li")){
+                  FormWaiterUL.insertAdjacentHTML("beforeend", SubmitElement)
+                }
+              }
+            })
+          })
+
+          FormWaiter.addEventListener("submit", (e) => {
+
+            const TimeStamp = new Date().getTime();
+
+            if(InputSelect.length > 0){
+              
+              let array_call_waiter = {
+                customer_name: GetNameCustomer,
+                customer_key: GetKeyCustomer,
+                table: NumberTable,
+                key_table: KeyTable,
+                textSelected: InputSelect,
+                timestamp: TimeStamp
+              }
+
+              const Waiter = DatabaseWaiter.ref("/restaurants/" + KeyRestaurant + "/call_waiter/");
+
+              Waiter.push(array_call_waiter)
+                .then(success => {
+
+                  app.sheet.close(".sheet-waiter")
+
+                  const toast = app.toast.create({
+                    text: "Seu pedido foi enviado, em breve o garçom chegará em sua mesa",
+                    closeButton: true,
+                    closeButtonColor: 'Red',
+                    closeButtonText: 'OK'
+                  })
+
+                  toast.open()
+
+                })
+                .catch(error => {
+
+                  const toast = app.toast.create({
+                    text: "Houve um erro ao chamar o garçom. Tente novamente em breve",
+                    closeButton: true,
+                    closeButtonColor: 'Red',
+                    closeButtonText: 'OK'
+                  })
+
+                  toast.open()
+
+                })
+            }
+
+            e.preventDefault()
+          })
+
+        }
+      }
     }
   },
   {
@@ -506,6 +626,14 @@ var routes = [
     on: {
       pageInit: function(){
         ReturnCartItens()
+        const ShareCartInput = document.querySelector("#share_cart_input");
+        $(".popover-share").on("popover:open", function(){
+          if(CustomerShareCart == true){
+            ShareCartInput.checked = true
+          }else{
+            ShareCartInput.checked = false
+          }
+        })
       },
     }
   },

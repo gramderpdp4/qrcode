@@ -1,161 +1,275 @@
 async function ReturnCartItens(){
     const CartItens = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/"),
-    Container = document.querySelector("#container-cart");
+    Container = document.querySelector("#container-cart"),
+    CartShare = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);
 
-    CartItens.on("value", (data) => {
-        if(data.exists()){
 
-            Container.innerHTML = ""
 
-            let CalculatesTotalPrice = 0;
+    CartShare.on("value", (CartShare) => {
+        const ShareCartStatus = CartShare.val().shareCart;
+        CartItens.on("value", (data) => {
+            if(data.exists()){
 
-            const DataItens = data.val(),
-            ItensKeys = Object.keys(DataItens);
+                Container.innerHTML = ""
 
-            ItensKeys.forEach((Key, Indice) => {
-                const name = DataItens[Key].name,
-                price = DataItens[Key].price,
-                quantity = DataItens[Key].quantity,
-                image = DataItens[Key].image,
-                CalculateUnitValue = Number(quantity) * parseFloat(price);
+                let CalculatesTotalPrice = 0;
 
-                CalculatesTotalPrice += CalculateUnitValue
+                const DataItens = data.val(),
+                ItensKeys = Object.keys(DataItens);
 
-                const Li = document.createElement("li"),
-                Link = document.createElement("div"),
-                Media = document.createElement("div"),
-                Inner = document.createElement("div"),
-                TitleRow = document.createElement("div"),
-                Title = document.createElement("div"),
-                After = document.createElement("div"),
-                Row = document.createElement("div"),
-                Col80 = document.createElement("div"),
-                Col5 = document.createElement("div"),
-                Deleted = document.createElement("button"),
-                Subtitle = document.createElement("div"),
-                Stepper = document.createElement("div"),
-                StepperMinus = document.createElement("div"),
-                StepperPlus = document.createElement("div"),
-                StepperWrap = document.createElement("div"),
-                StepperInput = document.createElement("input"),
-                Swipeout = document.createElement("div"),
-                SwipeoutButton = document.createElement("a");
+                ItensKeys.forEach((Key, Indice) => {
+                    const name = DataItens[Key].name,
+                    price = DataItens[Key].price,
+                    CustomerKey = DataItens[Key].customer_key,
+                    quantity = DataItens[Key].quantity,
+                    image = DataItens[Key].image,
+                    itemShare = DataItens[Key].share,
+                    CalculateUnitValue = Number(quantity) * parseFloat(price);
 
-                Stepper.id = "Stepper" + Key
-                Stepper.classList.add("stepper", "stepper-fill")
-                StepperMinus.classList.add("stepper-button-minus")
-                StepperPlus.classList.add("stepper-button-plus")
-                StepperWrap.classList.add("stepper-input-wrap")
+                    if(ShareCartStatus == false && CustomerKey == GetKeyCustomer){
+                        CalculatesTotalPrice += CalculateUnitValue
 
-                StepperInput.setAttribute("min", "0")
-                StepperInput.setAttribute("step", "1")
-                StepperInput.setAttribute("value", quantity)
-                StepperInput.setAttribute("max", "1000")
+                        const Li = document.createElement("li"),
+                        Link = document.createElement("div"),
+                        Media = document.createElement("div"),
+                        Inner = document.createElement("div"),
+                        TitleRow = document.createElement("div"),
+                        Title = document.createElement("div"),
+                        After = document.createElement("div"),
+                        Row = document.createElement("div"),
+                        Col80 = document.createElement("div"),
+                        Col5 = document.createElement("div"),
+                        Deleted = document.createElement("button"),
+                        Subtitle = document.createElement("div"),
+                        Stepper = document.createElement("div"),
+                        StepperMinus = document.createElement("div"),
+                        StepperPlus = document.createElement("div"),
+                        StepperWrap = document.createElement("div"),
+                        StepperInput = document.createElement("input"),
+                        Swipeout = document.createElement("div"),
+                        SwipeoutButton = document.createElement("a");
+    
+                        Stepper.id = "Stepper" + Key
+                        Stepper.classList.add("stepper", "stepper-fill")
+                        StepperMinus.classList.add("stepper-button-minus")
+                        StepperPlus.classList.add("stepper-button-plus")
+                        StepperWrap.classList.add("stepper-input-wrap")
+    
+                        StepperInput.setAttribute("min", "0")
+                        StepperInput.setAttribute("step", "1")
+                        StepperInput.setAttribute("value", quantity)
+                        StepperInput.setAttribute("max", "1000")
+    
+                        Stepper.setAttribute("data-wraps", "true")
+                        Stepper.setAttribute("data-autorepeat", "true")
+                        Stepper.setAttribute("data-autorepeat-dynamic", "true")
+                        Stepper.setAttribute("data-decimal-point", "2")
+                        Stepper.setAttribute("data-manual-input-mode", "true")
+    
+                        StepperWrap.innerHTML = `
+                        <input type="text" value="${quantity}" min="0" max="1000" step="1" onchange="UpdatePriceCartItem('${Key}', '${name}', this)"/>
+                        `
+                        Stepper.appendChild(StepperMinus)
+                        Stepper.appendChild(StepperWrap)
+                        Stepper.appendChild(StepperPlus)
+    
+                        Deleted.innerHTML = `
+                        <a onclick="DeleteItemCart('${Key}', '${name}')">
+                            <span style="color: #d63031" class="material-symbols-outlined">
+                            cancel
+                            </span>
+                        <a>
+                        `
+                    
+                        Media.innerHTML = `<img src="${image}" style="width: 80px; height: 80px; border-radius: 12px"/>`
+    
+                        Li.classList.add("swipeout")
+                        Link.classList.add("item-content", "swipeout-content")
+                        Media.classList.add("item-media")
+                        Inner.classList.add("item-inner")
+                        TitleRow.classList.add("item-title-row")
+                        Title.classList.add("item-title")
+                        After.classList.add("item-after")
+                        Row.classList.add("row")
+                        Col80.classList.add("col-80")
+                        Col5.classList.add("col-20")
+                        Subtitle.classList.add("item-subtitle")
+                        Deleted.classList.add("button")
+                        Swipeout.classList.add("swipeout-actions-left")
+                        SwipeoutButton.classList.add("swipeout-overswipe")
+    
+                        Title.innerText = name
+                        Col80.innerText = "R$ " + CalculateUnitValue.toFixed(2)
+    
+                        Li.style.borderBottom = "1px solid #303030"
+                        Li.id = Key
+                        Deleted.style.alignItems = "normal"
+    
+                        Swipeout.appendChild(SwipeoutButton)
+                        Col5.appendChild(Deleted)
+                        Row.appendChild(Col80)
+                        Row.appendChild(Col5)
+                        After.appendChild(Row)
+                        TitleRow.appendChild(Title)
+                        TitleRow.appendChild(After)
+                        Subtitle.appendChild(Stepper)
+                        Inner.appendChild(TitleRow)
+                        Inner.appendChild(Subtitle)
+                        Link.appendChild(Media)
+                        Link.appendChild(Inner)
+                        Link.appendChild(Swipeout)
+                        Li.appendChild(Link)
+                        
+                        Container.appendChild(Li)
+    
+                        const stepperTime = app.stepper.create({
+                            el: '#Stepper'+Key,
+                        })
+    
+                        if(ItensKeys.length - 1 == Indice){
+                            CreateContainerFinished(1, CalculatesTotalPrice)
+                        }    
+                    }else if(ShareCartStatus == true){
+                        if(itemShare == true){
+                            CalculatesTotalPrice += CalculateUnitValue
 
-                Stepper.setAttribute("data-wraps", "true")
-                Stepper.setAttribute("data-autorepeat", "true")
-                Stepper.setAttribute("data-autorepeat-dynamic", "true")
-                Stepper.setAttribute("data-decimal-point", "2")
-                Stepper.setAttribute("data-manual-input-mode", "true")
-
-                StepperWrap.innerHTML = `
-                <input type="text" value="${quantity}" min="0" max="1000" step="1" onchange="UpdatePriceCartItem('${Key}', '${name}', this)"/>
-                `
-                Stepper.appendChild(StepperMinus)
-                Stepper.appendChild(StepperWrap)
-                Stepper.appendChild(StepperPlus)
-
-                Deleted.innerHTML = `
-                <a onclick="DeleteItemCart('${Key}', '${name}')">
-                    <span style="color: #d63031" class="material-symbols-outlined">
-                    cancel
-                    </span>
-                <a>
-                `
-               
-                Media.innerHTML = `<img src="${image}" style="width: 80px; height: 80px; border-radius: 12px"/>`
-
-                Li.classList.add("swipeout")
-                Link.classList.add("item-content", "swipeout-content")
-                Media.classList.add("item-media")
-                Inner.classList.add("item-inner")
-                TitleRow.classList.add("item-title-row")
-                Title.classList.add("item-title")
-                After.classList.add("item-after")
-                Row.classList.add("row")
-                Col80.classList.add("col-80")
-                Col5.classList.add("col-20")
-                Subtitle.classList.add("item-subtitle")
-                Deleted.classList.add("button")
-                Swipeout.classList.add("swipeout-actions-left")
-                SwipeoutButton.classList.add("swipeout-overswipe")
-
-                Title.innerText = name
-                Col80.innerText = "R$ " + CalculateUnitValue.toFixed(2)
-
-                Li.style.borderBottom = "1px solid #303030"
-                Li.id = Key
-                Deleted.style.alignItems = "normal"
-
-                Swipeout.appendChild(SwipeoutButton)
-                Col5.appendChild(Deleted)
-                Row.appendChild(Col80)
-                Row.appendChild(Col5)
-                After.appendChild(Row)
-                TitleRow.appendChild(Title)
-                TitleRow.appendChild(After)
-                Subtitle.appendChild(Stepper)
-                Inner.appendChild(TitleRow)
-                Inner.appendChild(Subtitle)
-                Link.appendChild(Media)
-                Link.appendChild(Inner)
-                Link.appendChild(Swipeout)
-                Li.appendChild(Link)
-                
-                Container.appendChild(Li)
-
-                const stepperTime = app.stepper.create({
-                    el: '#Stepper'+Key,
+                            const Li = document.createElement("li"),
+                            Link = document.createElement("div"),
+                            Media = document.createElement("div"),
+                            Inner = document.createElement("div"),
+                            TitleRow = document.createElement("div"),
+                            Title = document.createElement("div"),
+                            After = document.createElement("div"),
+                            Row = document.createElement("div"),
+                            Col80 = document.createElement("div"),
+                            Col5 = document.createElement("div"),
+                            Deleted = document.createElement("button"),
+                            Subtitle = document.createElement("div"),
+                            Stepper = document.createElement("div"),
+                            StepperMinus = document.createElement("div"),
+                            StepperPlus = document.createElement("div"),
+                            StepperWrap = document.createElement("div"),
+                            StepperInput = document.createElement("input"),
+                            Swipeout = document.createElement("div"),
+                            SwipeoutButton = document.createElement("a");
+        
+                            Stepper.id = "Stepper" + Key
+                            Stepper.classList.add("stepper", "stepper-fill")
+                            StepperMinus.classList.add("stepper-button-minus")
+                            StepperPlus.classList.add("stepper-button-plus")
+                            StepperWrap.classList.add("stepper-input-wrap")
+        
+                            StepperInput.setAttribute("min", "0")
+                            StepperInput.setAttribute("step", "1")
+                            StepperInput.setAttribute("value", quantity)
+                            StepperInput.setAttribute("max", "1000")
+        
+                            Stepper.setAttribute("data-wraps", "true")
+                            Stepper.setAttribute("data-autorepeat", "true")
+                            Stepper.setAttribute("data-autorepeat-dynamic", "true")
+                            Stepper.setAttribute("data-decimal-point", "2")
+                            Stepper.setAttribute("data-manual-input-mode", "true")
+        
+                            StepperWrap.innerHTML = `
+                            <input type="text" value="${quantity}" min="0" max="1000" step="1" onchange="UpdatePriceCartItem('${Key}', '${name}', this)"/>
+                            `
+                            Stepper.appendChild(StepperMinus)
+                            Stepper.appendChild(StepperWrap)
+                            Stepper.appendChild(StepperPlus)
+        
+                            Deleted.innerHTML = `
+                            <a onclick="DeleteItemCart('${Key}', '${name}')">
+                                <span style="color: #d63031" class="material-symbols-outlined">
+                                cancel
+                                </span>
+                            <a>
+                            `
+                        
+                            Media.innerHTML = `<img src="${image}" style="width: 80px; height: 80px; border-radius: 12px"/>`
+        
+                            Li.classList.add("swipeout")
+                            Link.classList.add("item-content", "swipeout-content")
+                            Media.classList.add("item-media")
+                            Inner.classList.add("item-inner")
+                            TitleRow.classList.add("item-title-row")
+                            Title.classList.add("item-title")
+                            After.classList.add("item-after")
+                            Row.classList.add("row")
+                            Col80.classList.add("col-80")
+                            Col5.classList.add("col-20")
+                            Subtitle.classList.add("item-subtitle")
+                            Deleted.classList.add("button")
+                            Swipeout.classList.add("swipeout-actions-left")
+                            SwipeoutButton.classList.add("swipeout-overswipe")
+        
+                            Title.innerText = name
+                            Col80.innerText = "R$ " + CalculateUnitValue.toFixed(2)
+        
+                            Li.style.borderBottom = "1px solid #303030"
+                            Li.id = Key
+                            Deleted.style.alignItems = "normal"
+        
+                            Swipeout.appendChild(SwipeoutButton)
+                            Col5.appendChild(Deleted)
+                            Row.appendChild(Col80)
+                            Row.appendChild(Col5)
+                            After.appendChild(Row)
+                            TitleRow.appendChild(Title)
+                            TitleRow.appendChild(After)
+                            Subtitle.appendChild(Stepper)
+                            Inner.appendChild(TitleRow)
+                            Inner.appendChild(Subtitle)
+                            Link.appendChild(Media)
+                            Link.appendChild(Inner)
+                            Link.appendChild(Swipeout)
+                            Li.appendChild(Link)
+                            
+                            Container.appendChild(Li)
+        
+                            const stepperTime = app.stepper.create({
+                                el: '#Stepper'+Key,
+                            })
+        
+                            if(ItensKeys.length - 1 == Indice){
+                                CreateContainerFinished(1, CalculatesTotalPrice)
+                            }  
+                        }
+                    }
                 })
 
-                if(ItensKeys.length - 1 == Indice){
-                    CreateContainerFinished(1, CalculatesTotalPrice)
-                }
-             
-            })
+                
+                $(".swipeout").on("swipeout:opened", function(){
+                    const ElementSwipeout = $(this),
+                    SwipeoutId = ElementSwipeout.attr("id");
 
-            
-            $(".swipeout").on("swipeout:opened", function(){
-                const ElementSwipeout = $(this),
-                SwipeoutId = ElementSwipeout.attr("id");
+                    const ItemRemove = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + SwipeoutId);
 
-                const ItemRemove = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + SwipeoutId);
+                    ElementSwipeout.addClass("slit-out-horizontal")
 
-                ElementSwipeout.addClass("slit-out-horizontal")
+                    setTimeout(() => {
+                    ItemRemove.remove()
+                        .then(Success => {
+                            const ToastRemoved = app.toast.create({
+                                text: "Removido",
+                                closeTimeout: 2000
+                            })
 
-                setTimeout(() => {
-                ItemRemove.remove()
-                    .then(Success => {
-                        const ToastRemoved = app.toast.create({
-                            text: "Removido",
-                            closeTimeout: 2000
+                            ToastRemoved.open()
                         })
+                    }, 500);
+                })
 
-                        ToastRemoved.open()
-                    })
-                }, 500);
-            })
+            }else{
 
-        }else{
+                CreateContainerFinished(2)
 
-            CreateContainerFinished(2)
+                Container.innerHTML = ""
 
-            Container.innerHTML = ""
+                Container.innerHTML = `<p style="text-align: center">Seu carrinho está vazio</p>`
 
-            Container.innerHTML = `<p style="text-align: center">Seu carrinho está vazio</p>`
-
-        }
-    })
+            }
+        })
+})
 
     return
 }

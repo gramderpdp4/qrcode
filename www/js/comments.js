@@ -66,17 +66,11 @@ function AddComment(KeyItem){
 
     const FormComment = document.forms.formComment;
 
+    const ButtonPostMessage = document.querySelector(".button-send-review");
+
     const Comments = db.ref("/restaurants/" + KeyRestaurant + "/comments/");
 
-    FormComment.addEventListener("click", (e) => {
-
-        app.sheet.stepOpen(".sheet-modal-comments")
-
-        StepOpenComments(1)
-
-    })
-
-    FormComment.addEventListener("submit", (e) => {
+    ButtonPostMessage.addEventListener("click", (e) => {
 
         const TxtComment = FormComment.txt.value;
 
@@ -124,18 +118,16 @@ function AddComment(KeyItem){
                     toast.open()
 
                 })
-
-
         }
-        
 
-        e.preventDefault();
+        e.preventDefault()
 
+        return false
     })
 }
 
 
-function StepOpenComments(Number){
+function StepOpenComments(){
 
     const ElementStep = document.querySelector(".sheet-scrolled"),
     ElementContent = ElementStep.querySelector(".page-content-comments"),
@@ -143,14 +135,21 @@ function StepOpenComments(Number){
     ElementsScroll = document.querySelectorAll(".scrolled-container"),
     ElementDisabledScroll = document.querySelector(".sheet-scrolled"),
     ElementList = document.querySelector(".list-comment ul form"),
+    ElementNodeList = document.querySelector(".list-comment"),
+    ElementNodeListStart =  document.querySelector(".list-stars"),
+    ElementSheet = document.querySelector(".sheet-modal-comments"),
     ElementTxtInput = document.querySelector(".input_txt_comment");
 
+    app.sheet.stepOpen(".sheet-modal-comments")
     ElementStep.style.height = "100%"
     ElementContent.style.height = "90%"
     ElementBlock.style.height = "100%"
+    ElementNodeList.style.marginBottom = "2rem"
+    ElementNodeListStart.style.marginBottom = "1.2rem"
+    ElementTxtInput.removeAttribute("disabled")
+    ElementTxtInput.removeAttribute("readonly")
 
     ElementDisabledScroll.classList.remove("sheet-modal-swipe-step")
-
 }
 
 function StepCloseComments(){
@@ -158,11 +157,18 @@ function StepCloseComments(){
     const ElementStep = document.querySelector(".sheet-scrolled"),
     ElementContent = ElementStep.querySelector(".page-content-comments"),
     ElementBlock = document.querySelector(".page-block-comments"),
-    ElementTxtInput = document.querySelector(".input_txt_comment");
+    ElementNodeList = document.querySelector(".list-comment"),
+    ElementTxtInput = document.querySelector(".input_txt_comment"),
+    ElementNodeListStart =  document.querySelector(".list-stars");
 
     ElementStep.style.height = "auto"
     ElementContent.style.height = "25vh"
     ElementBlock.style.height = "auto"
+    ElementNodeList.style.marginBottom = "0.5rem"
+    ElementNodeListStart.style.marginBottom = "0.5rem"
+
+    ElementTxtInput.setAttribute("disabled", "disabled")
+    ElementTxtInput.setAttribute("readonly", "readonly")
 
     const ButtonSendComment = document.querySelector(".button-send-comment");
 

@@ -30,6 +30,7 @@
 body,html{
   font-family: 'Montserrat', sans-serif;
   max-width: 100vw !important;
+  transition: all .1s ease !important; 
 }
 
 .scrolled-down{
@@ -472,7 +473,7 @@ animation-delay: 5s;
 }
 
 .container-control-header{
-transition: all .1s ease !important; 
+  transition: all .1s ease !important; 
   top: 1em;
   align-items: center;
   justify-content: center;
@@ -1542,4 +1543,37 @@ h6{
 
 .block-title{
   color: white;
+}
+
+.list ul{
+  background: transparent !important;
+  color: white;
+}
+
+.button-p1{
+  background-color: var(--p1-bg-color-primary);
+  color: black;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  width: 100% !important;
+}
+
+.link{
+  color: var(--p1-bg-color-primary) !important;
+}
+
+.md .radio input[type=radio]:checked~.icon-radio, .md label.item-radio input[type=radio]:checked~* .icon-radio, .md label.item-radio input[type=radio]:checked~.icon-radio{
+  border-color: var(--p1-bg-color-primary) !important
+}
+
+.md .radio input[type=radio]:checked~.icon-radio:after, .md label.item-radio input[type=radio]:checked~* .icon-radio:after, .md label.item-radio input[type=radio]:checked~.icon-radio:after{
+  background-color: var(--p1-bg-color-primary) !important;
+}
+
+.button-send-review{
+  color: white;
+  left: 85%;
+  position: absolute;
+  bottom: 0;
 }

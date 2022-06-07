@@ -9,10 +9,10 @@
         </div>
         <div class="title" style="color:white !important; font-size: 3.8vw; font-weight: bold;">Meu carrinho</div>
         <div class="right">
-          <a class="link popover-open" href="#" data-popover=".popover-about"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+          <a class="link popover-open" href="#" data-popover=".popover-share"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
           </a>
         </div>
-        <div id="popover-options" class="popover popover-about" data-backdrop="false" style="background-color: #2e2e2e; color: white;">
+        <div id="popover-options" class="popover popover-share" data-backdrop="false" style="background-color: #2e2e2e; color: white;">
           <div class="popover-inner">
             <div class="list">
               <ul>
@@ -23,20 +23,12 @@
                       <div class="item-title">Carrinho compartilhado</div>
                       <div class="item-after">
                         <label class="toggle toggle-init">
-                          <input type="checkbox" id="share_cart_popover" onchange="shareCart(this)"/>
+                          <input type="checkbox" id="share_cart_input" onchange="ShareCartState(this)"/>
                           <span class="toggle-icon"></span>
                         </label>
                       </div>
                     </div>
                   </div>
-                </li>
-                <li>
-                  <a class="item-content item-link" data-transition="f7-cover" href="/changedMesa/">
-                    <div class="item-media"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: white"><path d="M19.924 10.383a1 1 0 0 0-.217-1.09l-5-5-1.414 1.414L16.586 9H4v2h15a1 1 0 0 0 .924-.617zM4.076 13.617a1 1 0 0 0 .217 1.09l5 5 1.414-1.414L7.414 15H20v-2H5a.999.999 0 0 0-.924.617z"></path></svg></div>
-                    <div class="item-inner" style="margin-left: 0;">
-                      <div class="item-title">Mudar mesa</div>
-                    </div>
-                  </a>
                 </li>
                 <li>
                   <a id="cupom__app__cart" class="item-content item-link">

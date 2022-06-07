@@ -23,6 +23,7 @@ let KeyRestaurant,
 KeyTable,
 GetKeyCustomer,
 GetNameCustomer,
+CustomerShareCart,
 NumberTable;
 
 async function CodeRestaurant(){
@@ -62,11 +63,6 @@ async function CodeRestaurant(){
                     CreateTabs(result.key_restaurant)
                     .then(CompletedCreateTabs => {
                       CreateTabElementContainer()
-                      .then(CompletedCreateTabContainer => {
-                        CreateTabsPages(result.key_restaurant)
-                        CallWaiter()
-                      })
-
                       if(CodeTable){
                         SelectCustomerTable(CodeTable)
                       }
@@ -352,11 +348,15 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 
               if(FavoriteExists.exists()){
 
+                console.log("Favorite exists")
+
                 Favorite.innerHTML = `
                 <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85Z"/></svg>
                 `
 
               }else{
+
+                console.log("Favorite not exists")
 
                 Favorite.innerHTML = `
                 <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>            `
@@ -434,7 +434,7 @@ async function AuthUser(KeyRestaurant){
     })
     .then(res => res.json())
       .then(result => {
-        LoginUserFirebaseAuth(result.email, result.password, result.name, result.session, result.CustomerKey)
+        LoginUserFirebaseAuth(result.email, result.password, result.name, result.session, result.CustomerKey, result.shareCart)
       })
 
   }else{
@@ -542,6 +542,7 @@ async function AddToCart(Key, Name, Price, Image){
           name: Name,
           key_item: Key,
           price: Price,
+          share: CustomerShareCart,
           image: Image,
           customer_name: GetNameCustomer,
           customer_key: GetKeyCustomer,
@@ -607,16 +608,20 @@ async function CreateUserFirebaseAuth(Password, Email, EmailEncrypted, PasswordE
   });
 }
 
-async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecret, CustomerKey){
+async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecret, CustomerKey, ShareCart){
   firebase.auth().signInWithEmailAndPassword(Email, Password)
   .then((userCredential) => {
     // Signed in
     var user = userCredential.user;
 
+    CustomerShareCart = ShareCart
     GetNameCustomer = CustomerName
     GetKeyCustomer = CustomerKey.toString()
 
     InsertDetailsUser(CustomerName)
+
+    CreateTabsPages(KeyRestaurant)
+    CallWaiter()
 
   })
   .catch((error) => {
@@ -739,8 +744,11 @@ function ItensSearch(){
                   }
                 }
                 
+         
+
                 if(ElementCountStars > 59){
-                  if(MaxElementsStars < 5){
+                  if(MaxElementsStars <= 5){
+
                     ContainerItensSearch.appendChild(Li)
 
                     MaxElementsStars++
@@ -866,81 +874,12 @@ function AddStars(CountStars, ContainerElement, CountUsers, NumberIdenti){
       }
 }
 
-
-function addFavorite(Element, ItemKey, Name, Price, Image, KeyCategory){
-
-  const Favorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/"),
-  ItemExists = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/").orderByChild("key_item").equalTo(ItemKey);
-
-  ItemExists.once("value", (data) => {
-
-    if(data.exists()){
-
-      const Key = Object.keys(data.val());
-
-      const RemoveFavorite = db.ref("/restaurants/" + KeyRestaurant + "/customers/"+ GetKeyCustomer + "/favorites/" + Key);
-
-      RemoveFavorite.remove()
-        .then(success => {
-
-          Element.innerHTML = `
-          <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85ZM12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45Q12 11.45 12 11.45ZM12 18.25Q15.55 15.025 17.738 12.688Q19.925 10.35 19.925 8.15Q19.925 6.675 18.938 5.688Q17.95 4.7 16.45 4.7Q15.3 4.7 14.288 5.337Q13.275 5.975 12.45 7.45H11.55Q10.725 5.975 9.713 5.337Q8.7 4.7 7.55 4.7Q6.05 4.7 5.062 5.688Q4.075 6.675 4.075 8.15Q4.075 10.35 6.263 12.688Q8.45 15.025 12 18.25Z"/></svg>
-          `
-          
-          const toast = app.toast.create({
-            text: `${Name} removido dos favoritos`,
-            closeTimeout: 2000
-          })
-    
-          toast.open()
-
-        })
-        .catch(error => [
-
-        ])
-
-    }else{
-
-      let array_favorite = {
-        key_item: ItemKey,
-        image: Image,
-        name: Name,
-        price: Price,
-        key_category: KeyCategory
-      }
-    
-      Favorite.push(array_favorite)
-        .then(success => {
-
-          Element.innerHTML = `
-          <svg style="fill: var(--p1-bg-color-principal)" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 19.475 11.275 18.85Q7.65 15.525 5.4 13.087Q3.15 10.65 3.15 8.175Q3.15 6.3 4.413 5.037Q5.675 3.775 7.55 3.775Q8.625 3.775 9.8 4.325Q10.975 4.875 12 6.425Q13.05 4.875 14.213 4.325Q15.375 3.775 16.45 3.775Q18.325 3.775 19.587 5.037Q20.85 6.3 20.85 8.15Q20.85 10.65 18.6 13.087Q16.35 15.525 12.725 18.85Z"/></svg>
-          `
-
-          const toast = app.toast.create({
-            text: `${Name} adicionado ao favoritos`,
-            closeButton: true,
-            closeButtonText: "Ok",
-            closeButtonColor: "blue",
-          })
-    
-          toast.open()
-
-        })
-        .catch(error => {
-          
-        })
-
-    }
-  })
-}
-
 function CallWaiter(){
-
   const Container = document.querySelector(".p1-container-full");
 
   const HTML = `
   <div class="fab fab-extended fab-right-bottom fab-waiter color-red">
-    <a href="#">
+    <a href="/call-waiter/">
       <span class="material-symbols-outlined">
         room_service
         </span>
@@ -949,7 +888,6 @@ function CallWaiter(){
   `
 
   Container.insertAdjacentHTML("beforeend", HTML)
-
 }
 
 function CustomerPage(){
@@ -1038,7 +976,53 @@ function CustomerPage(){
             break;
         }
       })
-           
     }
   })
+}
+
+function ShareCartState(El){
+  const User = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer),
+  CartItens = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/").orderByChild("customer_key").equalTo(GetKeyCustomer);
+
+  if(El.checked == true){
+    CustomerShareCart = true
+    let arr_cart_share = {
+      shareCart: true
+    }
+    User.update(arr_cart_share)
+    CartItens.once("value", (CartItens) => {
+      if(CartItens.exists()){
+        const DataCart = CartItens.val(),
+        CartKeys = Object.keys(DataCart);
+
+        CartKeys.forEach(ItemKey => {
+          const UpdateCartItemState = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + ItemKey);
+          let arr_upd_item_share = {
+            share: true
+          }
+          UpdateCartItemState.update(arr_upd_item_share)
+        })
+      }
+    })
+  }else{
+    CustomerShareCart = false
+    let arr_cart_share = {
+      shareCart: false
+    }
+    User.update(arr_cart_share)
+    CartItens.once("value", (CartItens) => {
+      if(CartItens.exists()){
+        const DataCart = CartItens.val(),
+        CartKeys = Object.keys(DataCart);
+
+        CartKeys.forEach(ItemKey => {
+          const UpdateCartItemState = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + ItemKey);
+          let arr_upd_item_share = {
+            share: false
+          }
+          UpdateCartItemState.update(arr_upd_item_share)
+        })
+      }
+    })
+  }
 }
