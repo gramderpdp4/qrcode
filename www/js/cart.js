@@ -12,7 +12,8 @@ async function ReturnCartItens(){
 
                 Container.innerHTML = ""
 
-                let CalculatesTotalPrice = 0;
+                let CalculatesTotalPrice = 0,
+                CreateFinished = 0;
 
                 const DataItens = data.val(),
                 ItensKeys = Object.keys(DataItens);
@@ -122,13 +123,15 @@ async function ReturnCartItens(){
                         
                         Container.appendChild(Li)
     
-                        const stepperTime = app.stepper.create({
+                        app.stepper.create({
                             el: '#Stepper'+Key,
                         })
-    
-                        if(ItensKeys.length - 1 == Indice){
+
+                        if(CreateFinished == 0){
                             CreateContainerFinished(1, CalculatesTotalPrice)
-                        }    
+                            CreateFinished++
+                        }
+                          
                     }else if(ShareCartStatus == true){
                         if(itemShare == true){
                             CalculatesTotalPrice += CalculateUnitValue
@@ -230,9 +233,7 @@ async function ReturnCartItens(){
                                 el: '#Stepper'+Key,
                             })
         
-                            if(ItensKeys.length - 1 == Indice){
-                                CreateContainerFinished(1, CalculatesTotalPrice)
-                            }  
+                            CreateContainerFinished(1, CalculatesTotalPrice)
                         }
                     }
                 })
@@ -397,13 +398,13 @@ function CreateContainerFinished(Code, CalculatedPrice){
 
         const CreateToolbar = () => {
             return new Promise((resolve, reject) => {
-                    
+
                     if(!LastChild.classList.contains("toolbar")){
                         const ContainerFinished = `
                         <div class="toolbar toolbar-bottom" style="height: 7rem; background: var(--f7-navbar-shadow-image); background: var(--p1-bg-color-secundary);">
                             <div class="toolbar-inner" style="display: initial; padding: 1rem">
                             <p style="color: white; font-size: 1.5rem" id="container-calculated-price"></p>
-                            <button style="margin-top: 0.5rem;" class="button button-fill button-finished-order">Fazer pedido</button>
+                            <a style="margin-top: 0.5rem;" class="button button-fill button-finished-order" href="/payment/" data-transition="f7-cover">Fazer pedido</a>
                             </div>
                         </div>
                         `;    

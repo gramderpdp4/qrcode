@@ -48,18 +48,12 @@ function GetComments(KeyItem){
                 ContainerMessages.appendChild(Message)
 
             })
-
-
         }else{
 
             ContainerMessages.innerHTML = `<p style="text-align: center; position: relative; padding-top: 1rem"> Seja o primeiro a comentar </p>`
 
         }
-
     })
-
-
-
 }
 
 function AddComment(KeyItem){

@@ -9,8 +9,6 @@ var app = new Framework7({
   view: {
     stackPages: true
   },
-  // App store
-  store: store,
   // App routes
   routes: routes,
 });
@@ -1025,4 +1023,191 @@ function ShareCartState(El){
       }
     })
   }
+}
+
+async function InitializePayment(){
+  const RestaurantConfigs = db.ref("/restaurants/" + KeyRestaurant + "/configs/services/"),
+  ContainerPayment = document.querySelector("#container-payment");
+
+  RestaurantConfigs.on("value", (data) => {
+
+    if(data.exists()){
+      const Services = data.val(),
+      Keys = Object.keys(Services);
+
+      let PaymentTheEnd;
+
+      Keys.forEach(Key => {
+        const Code = Services[Key].code,
+        Type = Services[Key].type,
+        Status = Services[Key].status;
+
+        if(Type == "payAtTheEnd" && Code == 1){
+          PaymentTheEnd = Status
+        }
+      })
+
+      const PaymentMoment = document.createElement("a"),
+      PaymentEnd = document.createElement("a");
+      PaymentMoment.classList.add("col", "button", "button-fill")
+      PaymentMoment.innerText = "Pagar agora"
+
+      if(PaymentTheEnd == true){
+        PaymentEnd.classList.add("col", "button", "button-fill")
+        PaymentEnd.innerText = "Continuar consumindo e pagar no final"
+        PaymentEnd.style.margin = "1rem"
+        PaymentEnd.style.textTransform = "initial"
+        PaymentEnd.setAttribute("onclick", "PaymentEnd()")
+      }
+
+      PaymentMoment.setAttribute("onclick", "PayNow()")
+      PaymentMoment.style.margin = "1rem"
+      PaymentMoment.style.textTransform = "initial"
+
+      ContainerPayment.appendChild(PaymentMoment)
+      ContainerPayment.appendChild(PaymentEnd)
+
+    }
+  })
+}
+
+
+function PaymentEnd(){
+  alert("End")
+}
+
+function PayNow(){
+  const Element = $("#container-payment");
+  app.preloader.showIn(Element.parent(), "blue");
+  Element.css({
+    pointerEvents: "none",
+    opacity: 0.5
+  })
+
+  setTimeout(() => {
+    app.preloader.hideIn(Element.parent())
+    Element.css({
+      pointerEvents: "auto",
+      opacity: 1
+    })
+
+    let OpenedPopup = 0;
+
+    const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
+
+    if(CustomerShareCart == true){
+      ItemsCart.once("value", (data) => {
+        const Itens = data.val(),
+        Keys = Object.keys(Itens);
+  
+        Keys.forEach( async (Key) => {
+          const CustomerKey = Itens[Key].customer_key;
+  
+          if(CustomerKey != GetKeyCustomer){
+            if(OpenedPopup == 0){
+              OpenedPopup++          
+              app.view.main.router.navigate("/popup-items/")
+            }
+
+            console.log(Itens[Key])
+            console.log(GetKeyCustomer)
+          }
+        })
+      })
+    }
+  }, 400);
+}
+
+function ViewItensIsNotMine(Ref){
+  const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/"),
+  Container = document.querySelector("#IsNotMime");
+  
+  if(CustomerShareCart == true){
+    ItemsCart.once("value", (data) => {
+      const Itens = data.val(),
+      Keys = Object.keys(Itens);
+
+      Keys.forEach( async (Key) => {
+        const CustomerKey = Itens[Key].customer_key;
+
+        if(CustomerKey != GetKeyCustomer){
+          const image = Itens[Key].image,
+          price = Itens[Key].price,
+          name = Itens[Key].name;
+
+          const Li = document.createElement("li"),
+          Link = document.createElement("a"),
+          Media = document.createElement("div"),
+          Inner = document.createElement("div"),
+          Subtitle = document.createElement("div"),
+          TitleRow = document.createElement("div"),
+          Row = document.createElement("div"),
+          After = document.createElement("div"),
+          Title = document.createElement("div");
+
+          Link.classList.add("item-link", "item-content")
+          Media.classList.add("item-media")
+          Subtitle.classList.add("item-text")
+          Inner.classList.add("item-inner")
+          Row.classList.add("row")
+          Title.classList.add("item-title", "item-title-search")
+          After.classList.add("item-after")
+          TitleRow.classList.add("item-title-row")
+
+          Media.innerHTML = `<img src="${image}" style="width: 70px; height: 70px; border-radius: 8px" />`
+
+          Title.style.color = "white"
+          After.style.color = "white"
+          Inner.style.display = "flow-root"
+          Row.style.maxWidth = "36%"
+
+          Title.innerText = name
+          After.innerText = "R$ " + price
+
+          Subtitle.appendChild(Row)
+          TitleRow.appendChild(Title)
+          TitleRow.appendChild(After)
+          Inner.appendChild(TitleRow)
+          Inner.appendChild(Subtitle)
+          Link.appendChild(Media)
+          Link.appendChild(Inner)
+          Li.appendChild(Link)
+
+          Container.appendChild(Li)
+        }
+      })
+    })
+  }
+}
+
+function PaymentAllItens(){
+  const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
+  
+  ItemsCart.once("value", (data) => {
+    const Itens = data.val(),
+    Keys = Object.keys(Itens);
+
+    let AllPrice = 0,
+    AllQuantity;
+
+    Keys.forEach( async (Key, Indice) => {
+      const price = Itens[Key].price,
+      quantity = Itens[Key].quantity;
+
+      if(quantity != undefined || quantity != null && price != undefined || price != null){
+        AllPrice += parseFloat(price) * Number(quantity)
+
+        if(Keys.length - 1 == Indice){
+          alert(AllPrice)
+        }
+      }
+    })
+  })
+
+  function CalculatedPrice(Quantity, Price){
+    const CalculatedPrice = Quantity * Price;
+
+    alert(CalculatedPrice)
+  }
+
 }

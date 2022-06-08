@@ -11,6 +11,8 @@ const compress = require("compress-base64")
 const { AES, enc } = require("crypto-js");
 const fs = require("fs");
 const Json = require("archiver/lib/plugins/json");
+const stripe = require('stripe')('sk_test_51L8AeeKFCvGWaMbovT5OsuZZYvdtKb3plAXHL0k9DSNBd5hJ9za2tBAUZ8bYZERegetJeIyuJD6gb5nlomQMIaXu00l647o0VG');
+
 
 //hgello
 
@@ -58,16 +60,9 @@ const db = adminFirebase.database()
 const EncryptedPassword = "PlayUmEncryptedAes256And20220521Password",
 EncryptedEmail = "PlayUmEncryptedAes256And2114"
 
-const Ref = db.ref("/restaurants/-N1Gm7qGEIR0zbiDwnm1/configs/services/");
+//CRIA SESSÃO DE PAGAMENTO
 
-let arr = {
-    code: 6,
-    status: true,
-    icon: `<span class="material-symbols-outlined">
-    table_bar
-    </span>`,
-    type: 'changedTable'
-}
+//CRIA SESSÃO DE PAGAMENTO
 
 //IDENTIFICA O RESTAURANTE PELO CÓDIGO, DO QR CODE
 
@@ -280,6 +275,13 @@ app.post("/LoginUser", async (req, res) => {
 
 //LOGA CLIENTE
 
+//PAGAMENTO 
+
+app.post("/Payment", async (req, res) => {
+    
+})
+
+//PAGAMENTO
 
 
 app.listen(port, () => {

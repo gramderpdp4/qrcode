@@ -31,6 +31,7 @@
     "material-icons": "^1.10.10",
     "moment-timezone": "^0.5.34",
     "skeleton-elements": "^4.0.0",
+    "stripe": "^9.6.0",
     "swiper": "^8.1.4"
   },
   "devDependencies": {
