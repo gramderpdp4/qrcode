@@ -277,9 +277,30 @@ app.post("/LoginUser", async (req, res) => {
 
 //PAGAMENTO 
 
-app.post("/Payment", async (req, res) => {
-    
-})
+app.post("/create-payment-intent", async (req, res) => {
+    const Amount = Number(req.body.amount).toFixed(2).replace(/[^a-z0-9]/gi,'');
+
+    stripe.paymentIntents.create({
+      amount: Amount,
+      currency: "brl",
+      metadata: {
+          integration_check: 'accept_a_payment',
+          restaurant: req.body.restaurant,
+          customerKey: req.body.customerKey,
+          customerName: req.body.customerName
+        },
+    })
+    .then(success => {
+        res.send({
+            clientSecret: success.client_secret,
+          })
+    })
+    .catch(error => {
+        res.send({
+            message: "error"
+        })
+    })
+  });
 
 //PAGAMENTO
 

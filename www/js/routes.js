@@ -685,10 +685,41 @@ var routes = [
   },
   {
     path: '/payment/',
+    transition: "f7-push",
     url: './pages/payment.html',
     on: {
       pageInit: function(){
         InitializePayment()
+      }
+    }
+  },
+  {
+    path: '/finished-payment/price/:price/',
+    async: function ({ router, to, resolve }) {
+      // App instance
+      var app = router.app;
+
+      var Price = to.params.Price;
+
+        var details = {
+          Price: Price
+        };
+        resolve(
+          {
+            url: './pages/finished-payment.html',
+          },
+          {
+            props: {
+              details: details,
+            }
+          }
+        );
+    },
+    on: {
+      pageAfterIn: function(e){
+        const Price = e.detail.route.params.price
+
+        KeyStripe(Price)
       }
     }
   },

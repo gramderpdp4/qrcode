@@ -52,7 +52,7 @@ async function CodeRestaurant(){
 
       KeyRestaurant = result.key_restaurant.toString().replaceAll(" ", "")
 
-      AuthUser(result.key_restaurant)
+      AuthUser(result.key_restaurant, CodeTable)
       .then(LoginSuccess => {
           if(LoginSuccess == true){
             CreateNavbar(result.logo, result.color_secundary, result.color_primary, result.key_restaurant)
@@ -61,9 +61,6 @@ async function CodeRestaurant(){
                     CreateTabs(result.key_restaurant)
                     .then(CompletedCreateTabs => {
                       CreateTabElementContainer()
-                      if(CodeTable){
-                        SelectCustomerTable(CodeTable)
-                      }
                     })
                   }
               })
@@ -416,7 +413,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
 }
 
 
-async function AuthUser(KeyRestaurant){
+async function AuthUser(KeyRestaurant, Code){
   const SessionExists = localStorage.getItem("Session_user"),
   GetEmailUser = localStorage.getItem("Email_user"),
   GetPasswordUser = localStorage.getItem("Password_user");
@@ -432,7 +429,7 @@ async function AuthUser(KeyRestaurant){
     })
     .then(res => res.json())
       .then(result => {
-        LoginUserFirebaseAuth(result.email, result.password, result.name, result.session, result.CustomerKey, result.shareCart)
+        LoginUserFirebaseAuth(result.email, result.password, result.name, result.session, result.CustomerKey, result.shareCart, Code)
       })
 
   }else{
@@ -445,7 +442,7 @@ async function AuthUser(KeyRestaurant){
     .then(res => res.json())
     .then(result => {
       if(result.data){
-        CreateUserFirebaseAuth(result.data.password, result.data.email, result.data.emailEncrypted, result.data.passwordEncrypted, result.data.secret, result.data.name)
+        CreateUserFirebaseAuth(result.data.password, result.data.email, result.data.emailEncrypted, result.data.passwordEncrypted, result.data.secret, result.data.name, Code)
       }
     })
 
@@ -464,7 +461,8 @@ async function SelectCustomerTable(CodeTable){
       const DataTable = data.val(),
       DataKey = Object.keys(DataTable);
 
-      let CountItensCart = 0
+      let CountItensShareCart = 0,
+      CountItensNoShareCart = 0;
       
       DataKey.forEach((Key, Indice) => {
         const Code = DataTable[Key].code,
@@ -476,25 +474,59 @@ async function SelectCustomerTable(CodeTable){
         if(ItensCart != undefined){
           const ItensCartKeys = Object.keys(ItensCart);
 
-          ItensCartKeys.forEach((KeyItemCart, IndiceItemCart) => {
+          ItensCartKeys.forEach( async (KeyItemCart, IndiceItemCart) => {
 
-            CountItensCart++
+            const itemShare = ItensCart[KeyItemCart].share,
+            customerKey = ItensCart[KeyItemCart].customer_key;
+
+            if(itemShare == true){
+              CountItensShareCart++
+            }else{
+              if(customerKey == GetKeyCustomer){
+                CountItensNoShareCart++
+              }
+            }
 
             if(ItensCartKeys.length - 1 == IndiceItemCart){
                 const LastChild = ContainerMenuButtons.lastElementChild;
 
+                const CartShareCustomer = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);
+
                 if(LastChild.classList.contains("menu-cart")){
-                    const Badge = document.createElement("div");
-                    Badge.classList.add("badge", "color-red", "badge-cart")
-                    Badge.innerText = CountItensCart
+                    await CartShareCustomer.once("value", (DataCartShare) => {
+                        if(DataCartShare.exists()){
+                          const Badge = document.createElement("div");
+                          Badge.classList.add("badge", "color-red", "badge-cart")
+      
+                          const BadgeElement = document.querySelector(".badge-cart");
 
-                    const BadgeElement = document.querySelector(".badge-cart");
+                          const ShareCartStatus = DataCartShare.val().shareCart;
+                                      
+                          if(itemShare == true){
+                            Badge.innerText = CountItensShareCart
+                          }else{
+                            if(customerKey == GetKeyCustomer){
+                             Badge.innerText = CountItensNoShareCart
+                            }
+                          }
 
-                    if(!BadgeElement){
-                      LastChild.appendChild(Badge)
-                    }else{
-                      BadgeElement.innerText = CountItensCart
-                    }
+                          if(ShareCartStatus == true){
+                              if(!BadgeElement){
+                                LastChild.appendChild(Badge)
+                              }else{
+                                BadgeElement.innerText = CountItensShareCart
+                              }
+                          }else if(ShareCartStatus == false){
+                              if(!BadgeElement){
+                                LastChild.appendChild(Badge)
+                              }else{
+                                BadgeElement.textContent = CountItensNoShareCart
+                              }
+                          }
+                      }else{
+                        alert("False")
+                      }
+                  })
                 }
             }
           })
@@ -591,13 +623,13 @@ function ItemPage(KeyItem, KeyCategory){
   })
 }
 
-async function CreateUserFirebaseAuth(Password, Email, EmailEncrypted, PasswordEncrypted,  SessionSecret, CustomerName){
+async function CreateUserFirebaseAuth(Password, Email, EmailEncrypted, PasswordEncrypted,  SessionSecret, CustomerName, Code){
   firebase.auth().createUserWithEmailAndPassword(Email, Password)
   .then((userCredential) => {
     localStorage.setItem("Session_user", SessionSecret)
     localStorage.setItem("Email_user", EmailEncrypted)
     localStorage.setItem("Password_user", PasswordEncrypted)
-    LoginUserFirebaseAuth(Email, Password, CustomerName)
+    LoginUserFirebaseAuth(Email, Password, CustomerName, Code)
   })
   .catch((error) => {
     var errorCode = error.code;
@@ -606,7 +638,7 @@ async function CreateUserFirebaseAuth(Password, Email, EmailEncrypted, PasswordE
   });
 }
 
-async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecret, CustomerKey, ShareCart){
+async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecret, CustomerKey, ShareCart, Code){
   firebase.auth().signInWithEmailAndPassword(Email, Password)
   .then((userCredential) => {
     // Signed in
@@ -615,6 +647,8 @@ async function LoginUserFirebaseAuth(Email, Password, CustomerName,  SessionSecr
     CustomerShareCart = ShareCart
     GetNameCustomer = CustomerName
     GetKeyCustomer = CustomerKey.toString()
+
+    SelectCustomerTable(Code)
 
     InsertDetailsUser(CustomerName)
 
@@ -993,7 +1027,7 @@ function ShareCartState(El){
         const DataCart = CartItens.val(),
         CartKeys = Object.keys(DataCart);
 
-        CartKeys.forEach(ItemKey => {
+        CartKeys.forEach((ItemKey, ItemIndice) => {
           const UpdateCartItemState = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + ItemKey);
           let arr_upd_item_share = {
             share: true
@@ -1013,7 +1047,7 @@ function ShareCartState(El){
         const DataCart = CartItens.val(),
         CartKeys = Object.keys(DataCart);
 
-        CartKeys.forEach(ItemKey => {
+        CartKeys.forEach((ItemKey, ItemIndice) => {
           const UpdateCartItemState = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + ItemKey);
           let arr_upd_item_share = {
             share: false
@@ -1023,6 +1057,7 @@ function ShareCartState(El){
       }
     })
   }
+  ReturnCartItens()
 }
 
 async function InitializePayment(){
@@ -1198,16 +1233,112 @@ function PaymentAllItens(){
         AllPrice += parseFloat(price) * Number(quantity)
 
         if(Keys.length - 1 == Indice){
-          alert(AllPrice)
+          AppendStripe(AllPrice)
         }
       }
     })
   })
+}
 
-  function CalculatedPrice(Quantity, Price){
-    const CalculatedPrice = Quantity * Price;
+function AppendStripe(Price){
+  const Stripe = document.createElement("script");
+  Stripe.src = "https://js.stripe.com/v3/"
 
-    alert(CalculatedPrice)
+  document.body.appendChild(Stripe)
+
+  app.popup.close(".popup")
+
+  app.view.main.router.navigate("/finished-payment/price/"+Price+"/")
+}
+
+function KeyStripe(Price){
+  const stripe = Stripe("pk_test_51L8AeeKFCvGWaMbo23KgKGAyiKbLMg0kflFDCVFThFoSkm6X3m95DSWVRW7KFuvd9mUfqLrVS4PwZKtm5AXRSrdm00NNbQNrhP");
+
+  fetch("/create-payment-intent", {
+    method: 'POST',
+    body: new URLSearchParams({
+      amount: Price,
+      customerName: GetNameCustomer,
+      customerKey: GetKeyCustomer,
+      restaurant: KeyRestaurant
+    })
+  })
+  .then(res => res.json())
+    .then(result => {
+
+      var elements = stripe.elements();
+
+      const clientSecret = result.clientSecret;
+
+      console.log(clientSecret)
+
+      var elements = stripe.elements();
+      var style = {
+        base: {
+          iconColor: '#c4f0ff',
+          color: '#fff',
+          fontWeight: '500',
+          fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+          fontSize: '16px',
+          fontSmoothing: 'antialiased',
+          ':-webkit-autofill': {
+            color: '#fce883',
+          },
+          '::placeholder': {
+            color: '#ffffff',
+          },
+        },
+        invalid: {
+          iconColor: '#FFC7EE',
+          color: '#FFC7EE',
+        },
+      };
+
+      var card = elements.create("card", { style: style });
+      card.mount("#card-element");
+
+      var form = document.getElementById('payment-form');
+
+      form.addEventListener('submit', function(ev) {
+        Toast.show("Processando pagamento ...")
+
+        ev.preventDefault();
+        // If the client secret was rendered server-side as a data-secret attribute
+        // on the <form> element, you can retrieve it here by calling `form.dataset.secret`
+        stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card,
+            billing_details: {
+              name: 'André Luis - Chimbras Pub',
+            }
+          }
+        }).then(function(result) {
+          console.log(result)
+          if (result.error) {
+            Toast.close()
+            Toast.show(result.error.message)
+          } else {
+            // The payment has been processed!
+            if (result.paymentIntent.status === 'succeeded') {
+              Toast.close()
+              Toast.show("Pagamento concluído")
+            }
+          }
+        });
+      });
+    })
+}
+
+const Toast = {
+  show: function(Text){
+    const T = app.toast.create({
+      text: Text,
+      cssClass: ".toast-payment"
+    })
+
+    T.open()
+  },
+  close: function(){
+     app.toast.close('.toast-payment')
   }
-
 }
