@@ -23,13 +23,15 @@ function CartItensShare(){
     Ref.once("value", (data) => {
         if(data.exists()){
 
-            Container.innerHTML = ""
-
             let CalculatesTotalPrice = 0,
             CreateFinished = 0;
 
             const DataItens = data.val(),
             ItensKeys = Object.keys(DataItens);
+
+            let CountItensShare = 0;
+
+            Container.innerHTML = ""
 
             ItensKeys.forEach((Key, Indice) => {
                 const name = DataItens[Key].name,
@@ -40,8 +42,10 @@ function CartItensShare(){
                 itemShare = DataItens[Key].share,
                 CalculateUnitValue = Number(quantity) * parseFloat(price);
 
-                    if(itemShare == true){
+                    if(itemShare == true || CustomerKey == GetKeyCustomer){
                         CalculatesTotalPrice += CalculateUnitValue
+
+                        CountItensShare++
 
                         const Li = document.createElement("li"),
                         Link = document.createElement("div"),
@@ -141,14 +145,14 @@ function CartItensShare(){
                         })
     
                         CreateContainerFinished(1, CalculatesTotalPrice)
-                    }else{
+                    }
 
-                        CreateContainerFinished(2)
-
-                        Container.innerHTML = ""
-
-                        Container.innerHTML = `<p style="text-align: center">Seu carrinho está vazio</p>`
-
+                    if(ItensKeys.length - 1 == Indice){
+                        if(CountItensShare == 0){
+                            CreateContainerFinished(2)
+                            Container.innerHTML = ""
+                            Container.innerHTML = `<p style="text-align: center">Seu carrinho está vazio</p>`
+                        }
                     }
             })
 
@@ -191,13 +195,14 @@ function CartItensNoShared(){
 
     Ref.on("value", (data) => {
         if(data.exists()){
-            Container.innerHTML = ""
 
             let CalculatesTotalPrice = 0,
             CreateFinished = 0;
 
             const DataItens = data.val(),
             ItensKeys = Object.keys(DataItens);
+
+            Container.innerHTML = ""
 
             ItensKeys.forEach((Key, Indice) => {
                 const name = DataItens[Key].name,
