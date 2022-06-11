@@ -2,7 +2,7 @@ async function ReturnCartItens(){
     const CartShare = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);
     const RefCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
 
-    RefCart.on("value", () => {
+    RefCart.once("value", () => {
         CartShare.once("value", (CartShare) => {
             const ShareCartStatus = CartShare.val().shareCart;
             if(ShareCartStatus == true){
@@ -353,6 +353,9 @@ function CartItensNoShared(){
 
 
 function UpdatePriceCartItem(KeyItem, Name, This){
+
+        Preloader.show(".page-cart .page-content", "blue")
+
         const Table = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + KeyItem),
         Val = This.value;
 
@@ -410,6 +413,12 @@ function UpdatePriceCartItem(KeyItem, Name, This){
             }
     
             Table.update(Array_update_price)
+            .then(success => {
+                Preloader.close(".page-cart .page-content")
+            })
+            .catch(error => {
+                Preloader.close(".page-cart .page-content")
+            })
 
         }
 }
@@ -454,14 +463,15 @@ function DeleteItemCart(KeyItem, Name){
                         DialogRemoveItem.close()
 
                     })
+                    .finally(() => {
+                        ReturnCartItens()
+                    })
 
                 })
 
             }
         }
       }).open(); 
-      
-      ReturnCartItens()
       
       return true
 }

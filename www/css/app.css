@@ -1590,3 +1590,7 @@ h6{
   position: absolute;
   bottom: 0;
 }
+
+.remove-favorite-popover{
+  color: #000000 !important;
+}

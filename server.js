@@ -140,13 +140,16 @@ app.post("/CreateNewUser", async (req, res) => {
                                 const CustomerName = UserData.val().name,
                                 CustomerPassword = UserData.val().password,
                                 CustomerSecretCode = UserData.val().secret_code,
-                                CustomerEmail = UserData.val().email;
+                                CustomerEmail = UserData.val().email,
+                                CustomerShareCart = UserData.val().shareCart;
 
                                 let Array_user_send_client = {
                                     name: CustomerName,
                                     passwordEncrypted: AES.encrypt(CustomerPassword, EncryptedPassword).toString(),
                                     password: ResultUser[0].password,
                                     secret: CustomerSecretCode,
+                                    shareCart: CustomerShareCart,
+                                    customerKey: SuccessCustomerCreate.key,
                                     emailEncrypted: AES.encrypt(CustomerEmail, EncryptedEmail).toString(),
                                     email: `${ResultUser[1].name.toString().replace(" ", "")}@gmail.com`
                                 }
