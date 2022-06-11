@@ -2,32 +2,30 @@ function TouchMove(Event, Element, Navbar, Subnavbar, NavbarParent){
 
   const ElementTxt = Element.previousElementSibling;
 
+  const AllContainers = document.querySelectorAll(".container-items");
+
   if(Element.scrollTop > 15){
 
     if(!Subnavbar.classList.contains("animation-scrolled-hidden")){
 
         Subnavbar.classList.add("animation-scrolled-hidden")
+        ElementTxt.style.display = "none"
+        $(".navbar-home").addClass("animation-scrolled-hidden")
         Navbar.classList.add("animation-scrolled-hidden")
-        ElementTxt.classList.add("animation-scrolled-hidden-text")
-        Element.style.marginTop = "1.3rem"
-
-        $(".p1-container-full .navbar").css({
-          "height": "5.6rem",
-          "box-shadow": "var(--f7-navbar-shadow-image)"
+        AllContainers.forEach(Container => {
+            Container.style.marginTop = "5vh"
         })
-    
     }
   }else{
 
     if(Subnavbar.classList.contains("animation-scrolled-hidden")){
 
         Subnavbar.classList.remove("animation-scrolled-hidden")
+        ElementTxt.style.display = "block"
+        $(".navbar-home").removeClass("animation-scrolled-hidden")
         Navbar.classList.remove("animation-scrolled-hidden")
-        ElementTxt.classList.remove("animation-scrolled-hidden-text")
-        Element.style.marginTop = "15vh"
-
-        $(".p1-container-full .navbar").css({
-          "height": "10rem"
+        AllContainers.forEach(Container => {
+          Container.style.marginTop = "15vh"
         })
         
     }
