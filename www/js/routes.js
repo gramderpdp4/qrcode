@@ -626,6 +626,7 @@ var routes = [
     on: {
       pageInit: function(){
         ReturnCartItens()
+        CartItensEvents()
         const ShareCartInput = document.querySelector("#share_cart_input");
         $(".popover-share").on("popover:open", function(){
           if(CustomerShareCart == true){

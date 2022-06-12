@@ -369,7 +369,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             Button.style.backgroundColor = "var(--p1-bg-color-primary)"
             Button.style.color = "black"
             Button.style.fontWeight = "bold"
-            Button.style.borderRadius = "8px"
+            Button.style.borderRadius = "6px"
             Button.style.marginTop = "0.5rem"
             Button.style.textTransform = "initial"
 
@@ -817,11 +817,11 @@ function CalculatorStart(CalculatedPercent, Container, CountCustomers, NumberIde
 
     AddStars(2, Container, CountCustomers, NumberIdenti)  
 
-  }else if(CalculatedPercent >= 41 && CalculatedPercent <= 59){
+  }else if(CalculatedPercent >= 41 && CalculatedPercent <= 60){
 
     AddStars(3, Container, CountCustomers, NumberIdenti)  
     
-  }else if(CalculatedPercent >= 60 && CalculatedPercent <= 80){
+  }else if(CalculatedPercent >= 61 && CalculatedPercent <= 80){
 
     AddStars(4, Container, CountCustomers, NumberIdenti)  
 
@@ -1104,13 +1104,18 @@ async function InitializePayment(){
         PaymentEnd.classList.add("col", "button", "button-fill")
         PaymentEnd.innerText = "Continuar consumindo e pagar no final"
         PaymentEnd.style.margin = "1rem"
+        PaymentEnd.style.color = "#000000"
+        PaymentEnd.style.backgroundColor = "var(--p1-bg-color-principal)"
         PaymentEnd.style.textTransform = "initial"
         PaymentEnd.setAttribute("onclick", "PaymentEnd()")
       }
 
       PaymentMoment.setAttribute("onclick", "PayNow()")
       PaymentMoment.style.margin = "1rem"
+      PaymentMoment.style.backgroundColor = "var(--p1-bg-color-principal)"
       PaymentMoment.style.textTransform = "initial"
+      PaymentMoment.style.color = "#000000"
+      
 
       ContainerPayment.appendChild(PaymentMoment)
       ContainerPayment.appendChild(PaymentEnd)
@@ -1343,10 +1348,11 @@ function KeyStripe(Price){
 }
 
 const Toast = {
-  show: function(Text, Element){
+  show: function(Text, Element, Timeout){
     const T = app.toast.create({
       text: Text,
-      cssClass: Element
+      cssClass: Element,
+      closeTimeout: Timeout
     })
 
     T.open()
@@ -1373,4 +1379,21 @@ const Preloader = {
 
     ElementPointerEvents.style.pointerEvents = "auto"
   }
+}
+
+
+function ReturnCartItens(){
+  const CartShare = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);
+  const RefCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
+
+  RefCart.once("value", () => {
+      CartShare.once("value", (CartShare) => {
+          const ShareCartStatus = CartShare.val().shareCart;
+          if(ShareCartStatus == true){
+              CartItensShare()
+          }else if(ShareCartStatus == false){
+              CartItensNoShared()
+          }
+      })
+  })
 }

@@ -1,19 +1,15 @@
-async function ReturnCartItens(){
-    const CartShare = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);
-    const RefCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
 
-    RefCart.once("value", () => {
-        CartShare.once("value", (CartShare) => {
-            const ShareCartStatus = CartShare.val().shareCart;
-            if(ShareCartStatus == true){
-                CartItensShare()
-            }else if(ShareCartStatus == false){
-                CartItensNoShared()
-            }
-        })
+function CartItensEvents(){
+    const RefCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
+    
+    RefCart.on("child_changed", (data) => {
+        ReturnCartItens()
     })
 
-    return
+    RefCart.on("child_removed", (data) => {
+        console.log("Remove")
+        ReturnCartItens()
+    })
 }
 
 function CartItensShare(){
@@ -31,7 +27,9 @@ function CartItensShare(){
 
             let CountItensShare = 0;
 
-            Container.innerHTML = ""
+           if(Container){
+                Container.innerHTML = ""
+           }
 
             ItensKeys.forEach((Key, Indice) => {
                 const name = DataItens[Key].name,
@@ -202,7 +200,9 @@ function CartItensNoShared(){
             const DataItens = data.val(),
             ItensKeys = Object.keys(DataItens);
 
-            Container.innerHTML = ""
+            if(Container){
+                Container.innerHTML = ""
+            }
 
             ItensKeys.forEach((Key, Indice) => {
                 const name = DataItens[Key].name,
@@ -463,10 +463,6 @@ function DeleteItemCart(KeyItem, Name){
                         DialogRemoveItem.close()
 
                     })
-                    .finally(() => {
-                        ReturnCartItens()
-                    })
-
                 })
 
             }

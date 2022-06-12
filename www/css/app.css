@@ -148,7 +148,7 @@ width: 91vw;
 }
 
 .card-p1, .card-p2, .card-p3{
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: rgb(2 2 2 / 25%) 0px 13px 27px -5px, rgb(0 0 0 / 30%) 0px 8px 16px -8px;
     width: 39vw;
     padding: 1rem 0.6rem;
@@ -156,7 +156,7 @@ width: 91vw;
   }
   
   .card-category{
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: rgb(2 2 2 / 25%) 0px 13px 27px -5px, rgb(0 0 0 / 30%) 0px 8px 16px -8px;
     padding: 1rem 0.6rem;
   }
@@ -219,7 +219,7 @@ a:focus, button:focus{
   position: relative;
   left: 2vw;
   width: 20vw !important;
-  border-radius: 0 12px 12px 12px !important;
+  border-radius: 0 6px 6px 6px !important;
   margin: 0 0 0.6rem 0;
 }
 
@@ -827,7 +827,7 @@ transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
 
 .text-payment-style{
   padding: 1.5rem !important;
-  border-radius: 12px;
+  border-radius: 6px;
   text-transform: initial;
   background-color: var(--p1-bg-color-principal) !important;
   color: black !important;
@@ -899,7 +899,7 @@ transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
   position: relative;
   margin: 40px;
   float: left;
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .opacity__hidden{
@@ -954,7 +954,7 @@ overflow: auto;
 .container-text-item{
   background-color: var(--p1-bg-color-secundary);
   padding: 1rem 1rem;
-  border-radius: 12px;
+  border-radius: 6px;
   margin-top: 18vh;
 }
 
@@ -994,7 +994,7 @@ overflow: auto;
 
  .p1-list-ul{
    background-color: var(--p1-bg-color-secundary) !important;
-   border-radius: 12px !important;
+   border-radius: 6px !important;
  }
 
  .pl-p1-item{
@@ -1343,7 +1343,7 @@ h6{
 }
 
 .searchbar, input, .subnavbar-home{
-  border-radius: 12px !important;
+  border-radius: 6px !important;
 }
 
 .container-search-itens{
@@ -1394,7 +1394,7 @@ h6{
   background: var(--p1-bg-color-secundary) !important;
   text-align: center;
   width: auto !important;
-  border-radius: 12px;
+  border-radius: 6px;
   height: 1.2rem;
 }
 
