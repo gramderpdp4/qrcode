@@ -15,16 +15,57 @@
     <div class="page-content" style="padding-top: 0;">
       <div class="container__style">
         <div class="block" style="padding-top: 4rem; background-color: #303030;">
-            <form id="payment-form">
-                <div id="card-element">
-                  <!-- Elements will create input elements here -->
+          <div class="list accordion-list">
+            <ul>
+              <li class="accordion-item"><a class="item-content item-link" href="#">
+                  <div class="item-inner">
+                    <div class="item-title">Cartão de crédito/débito</div>
+                  </div>
+                </a>
+                <div class="accordion-item-content">
+                  <div class="block">
+                    <form id="payment-form">
+                      <div class="list no-hairlines-md">
+                        <ul>
+                          <li class="item-content item-input">
+                            <div class="item-inner">
+                              <div class="item-title item-label">Nome</div>
+                              <div class="item-input-wrap">
+                                <input type="text" autocomplete="off" name="name" placeholder="Informe seu nome" />
+                                <span class="input-clear-button"></span>
+                              </div>
+                            </div>
+                          </li>
+                          </ul>
+                          </div>
+                        <div id="card-element">
+                          <li class="item-content skeleton-text skeleton-effect-fade">
+                            <div class="skeleton-block" style="width: 100%; height: 25px; border-radius: 12px"></div>
+                            </li>
+                        </div>
+                      
+                        <!-- We'll put the error messages in this element -->
+                        <div id="card-errors" role="alert"></div>
+                      
+                        <input type="submit" id="submit" class="button button-fill" style="margin-top: 2rem; margin-bottom: 1rem" value="Finalizar pagamento"/>
+                      </form>
+                  </div>
                 </div>
-              
-                <!-- We'll put the error messages in this element -->
-                <div id="card-errors" role="alert"></div>
-              
-                <button id="submit" class="button button-fill" style="margin-top: 2rem; margin-bottom: 1rem">Finalizar pagamento</button>
-              </form>
+              </li>
+              <li class="accordion-item"><a class="item-content item-link" href="#">
+                  <div class="item-inner">
+                    <div class="item-title">Dinheiro</div>
+                  </div>
+                </a>
+                <div class="accordion-item-content">
+                  <div class="block">
+                    <p>Item 2 content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla dignissim viverra
+                      velit sed euismod. Mauris sed quam vehicula, dapibus ante a, aliquet augue.</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div><!-- Separate collapsibles - omit "accordion-list" class-->
         </div>
       </div>
   </div>

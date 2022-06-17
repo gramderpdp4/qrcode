@@ -278,33 +278,45 @@ app.post("/LoginUser", async (req, res) => {
 
 //LOGA CLIENTE
 
-//PAGAMENTO 
-
-app.post("/create-payment-intent", async (req, res) => {
-    const Amount = Number(req.body.amount).toFixed(2).replace(/[^a-z0-9]/gi,'');
-
-    stripe.paymentIntents.create({
-      amount: Amount,
-      currency: "brl",
-      metadata: {
-          integration_check: 'accept_a_payment',
-          restaurant: req.body.restaurant,
-          customerKey: req.body.customerKey,
-          customerName: req.body.customerName
-        },
+//PAGAMENTO
+app.post("/Pay", async (req, res) => {
+    const customerName = req.body.customerName,
+    customerKey = req.body.customerKey,
+    sourceID = req.body.sourceID,
+    restaurant = req.body.restaurant;
+    stripe.customers.create({
+        name: customerName,
+        source: sourceID,
+        metadata: {
+            customerKey: customerKey,
+            customerName: customerName,
+            restaurantKey: restaurant
+        }
     })
     .then(success => {
-        res.send({
-            clientSecret: success.client_secret,
-          })
-    })
-    .catch(error => {
-        res.send({
-            message: "error"
+        stripe.paymentIntents.create({
+            amount: 2000,
+            currency: 'brl',
+            customer: success.id,
+            confirm: true,
+            source: success.default_source
+        })
+        .then(paymentSuccesss => {
+            res.send({
+                status: 'success'
+            })
+        })
+        .catch(paymentError => {
+            res.send({
+                status: 'error'
+            })
         })
     })
-  });
+    .catch(error => {
+        console.log(error)
+    })
 
+})
 //PAGAMENTO
 
 

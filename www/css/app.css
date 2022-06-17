@@ -1462,6 +1462,14 @@ h6{
   overflow-y: scroll;
 }
 
+.page, .popup-dark-them{
+  background-color: var(--p1-bg-color-secundary);
+}
+
+.popup-dark-them h2{
+  color: #ffffff;
+}
+
 .button-send-comment{
   background-color: var(--p1-bg-color-primary);
   color: black;
@@ -1593,4 +1601,31 @@ h6{
 
 .remove-favorite-popover{
   color: #000000 !important;
+}
+
+#payment-form .item-label{
+  color: white;
+  font-weight: bold;
+}
+
+#payment-form input::placeholder { /* Most modern browsers support this now. */
+  color: white !important;
+  opacity: 0.6;
+}
+
+#payment-form li{
+  padding-left: 0px;
+}
+
+#payment-form .list{
+  margin-bottom: 1rem;
+  margin-top: 0px;
+}
+
+.toast-payment{
+  background-color: #d63031;
+}
+
+#payment-form input{
+  color: white;
 }

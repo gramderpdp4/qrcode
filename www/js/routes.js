@@ -674,6 +674,36 @@ var routes = [
     }
   },
   {
+    path: '/payment-success/',
+    popup: {
+      url: './pages/popup/payment-success.html',
+      on: {
+        open: function(){
+          const Restaurant = db.ref("/restaurants/" + KeyRestaurant + "/configs/paymentSuccess"),
+          Container = document.querySelector("#container-payment-success"),
+          ContainerLogo = document.querySelector("#payment-success-logo");
+
+          Restaurant.once("value", (data) => {
+            if(data.exists()){
+              const Title = data.val().title;
+
+              const TitleElement = document.createElement("h2"),
+              LogoElement = document.createElement("img");
+              TitleElement.innerText = Title
+              LogoElement.src = LogoRestaurant
+              LogoElement.style.width = "98px"
+              LogoElement.style.height = "38px"
+              LogoElement.style.marginLeft = "2vw"
+
+              Container.appendChild(TitleElement)
+              ContainerLogo.appendChild(LogoElement)
+            }
+          })
+        }
+      }
+    }
+  },
+  {
     path: '/popup-items/',
     popup: {
       url: './pages/popup/popup-items.html',
@@ -696,6 +726,7 @@ var routes = [
   },
   {
     path: '/finished-payment/price/:price/',
+    transition: 'f7-cover',
     async: function ({ router, to, resolve }) {
       // App instance
       var app = router.app;

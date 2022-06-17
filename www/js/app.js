@@ -21,6 +21,7 @@ let KeyRestaurant,
 KeyTable,
 GetKeyCustomer,
 GetNameCustomer,
+LogoRestaurant,
 CustomerShareCart,
 NumberTable;
 
@@ -106,6 +107,8 @@ async function CreateNavbar(Logo, ColorSecundary, ColorPrimary, Key){
       </div>
     </div>
   `
+
+  LogoRestaurant = Logo
 
   StylePage.css({
     top: 0,
@@ -403,13 +406,10 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
             TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome, ElementNavbarParent)
           })
 
-         
         })
-
       }
     })
   })
-
 }
 
 
@@ -774,9 +774,7 @@ function ItensSearch(){
                     CalculatorStart(CalculatedPercent, Row, CountCustomersStars, 1)
                     ElementCountStars = parseInt(CalculatedPercent)
                   }
-                }
-                
-         
+                }        
 
                 if(ElementCountStars > 59){
                   if(MaxElementsStars <= 5){
@@ -1144,7 +1142,8 @@ function PayNow(){
       opacity: 1
     })
 
-    let OpenedPopup = 0;
+    let OpenedPopup = 0,
+    NoShareItens = 0;
 
     const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
 
@@ -1154,18 +1153,22 @@ function PayNow(){
         Keys = Object.keys(Itens);
   
         Keys.forEach( async (Key) => {
-          const CustomerKey = Itens[Key].customer_key;
+          const CustomerKey = Itens[Key].customer_key,
+          ShareItem = Itens[Key].share;
   
-          if(CustomerKey != GetKeyCustomer){
+          if(CustomerKey != GetKeyCustomer && ShareItem == true){
+            NoShareItens++
             if(OpenedPopup == 0){
               OpenedPopup++          
               app.view.main.router.navigate("/popup-items/")
             }
-
-            console.log(Itens[Key])
-            console.log(GetKeyCustomer)
           }
         })
+
+        if(NoShareItens == 0){
+          ViewItensIsNotMine()
+        }
+
       })
     }
   }, 400);
@@ -1180,13 +1183,18 @@ function ViewItensIsNotMine(Ref){
       const Itens = data.val(),
       Keys = Object.keys(Itens);
 
-      Keys.forEach( async (Key) => {
-        const CustomerKey = Itens[Key].customer_key;
+      let NoShareItens = 0;
 
-        if(CustomerKey != GetKeyCustomer){
+      Keys.forEach( async (Key) => {
+        const CustomerKey = Itens[Key].customer_key,
+        ItemShare = Itens[Key].share;
+
+        if(CustomerKey != GetKeyCustomer && ItemShare == true){
           const image = Itens[Key].image,
           price = Itens[Key].price,
           name = Itens[Key].name;
+
+          NoShareItens++
 
           const Li = document.createElement("li"),
           Link = document.createElement("a"),
@@ -1229,11 +1237,16 @@ function ViewItensIsNotMine(Ref){
           Container.appendChild(Li)
         }
       })
+ 
+      if(NoShareItens == 0){
+        PaymentAllItens(true)
+      }
+
     })
   }
 }
 
-function PaymentAllItens(){
+function PaymentAllItens(ItensNoShare){
   const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
   
   ItemsCart.once("value", (data) => {
@@ -1243,18 +1256,38 @@ function PaymentAllItens(){
     let AllPrice = 0,
     AllQuantity;
 
-    Keys.forEach( async (Key, Indice) => {
-      const price = Itens[Key].price,
-      quantity = Itens[Key].quantity;
-
-      if(quantity != undefined || quantity != null && price != undefined || price != null){
-        AllPrice += parseFloat(price) * Number(quantity)
-
-        if(Keys.length - 1 == Indice){
-          AppendStripe(AllPrice)
+    if(ItensNoShare == true){
+      Keys.forEach( async (Key, Indice) => {
+        const price = Itens[Key].price,
+        quantity = Itens[Key].quantity,
+        share = Itens[Key].share;
+  
+        if(quantity != undefined || quantity != null && price != undefined || price != null){
+          if(share == true){
+            AllPrice += parseFloat(price) * Number(quantity)
+          }
         }
+      })
+      
+      if(AllPrice > 1){
+        AppendStripe(AllPrice)
       }
-    })
+    
+    }else{
+      Keys.forEach( async (Key, Indice) => {
+        const price = Itens[Key].price,
+        quantity = Itens[Key].quantity;
+  
+        if(quantity != undefined || quantity != null && price != undefined || price != null){
+          AllPrice += parseFloat(price) * Number(quantity)
+        }
+      })
+
+      if(AllPrice > 1){
+        AppendStripe(AllPrice)
+      }
+
+    }
   })
 }
 
@@ -1271,24 +1304,10 @@ function AppendStripe(Price){
 
 function KeyStripe(Price){
   const stripe = Stripe("pk_test_51L8AeeKFCvGWaMbo23KgKGAyiKbLMg0kflFDCVFThFoSkm6X3m95DSWVRW7KFuvd9mUfqLrVS4PwZKtm5AXRSrdm00NNbQNrhP");
+  const form = document.querySelector('#payment-form');
+  const submit = form.querySelector("#submit");
 
-  fetch("/create-payment-intent", {
-    method: 'POST',
-    body: new URLSearchParams({
-      amount: Price,
-      customerName: GetNameCustomer,
-      customerKey: GetKeyCustomer,
-      restaurant: KeyRestaurant
-    })
-  })
-  .then(res => res.json())
-    .then(result => {
-
-      var elements = stripe.elements();
-
-      const clientSecret = result.clientSecret;
-
-      console.log(clientSecret)
+  form.style.pointerEvents = "none"
 
       var elements = stripe.elements();
       var style = {
@@ -1312,46 +1331,70 @@ function KeyStripe(Price){
         },
       };
 
-      var card = elements.create("card", { style: style });
+      var card = elements.create("card", { style: style, hidePostalCode: true });
       card.mount("#card-element");
+      
+      card.on("ready", function(event){
+        form.style.pointerEvents = "auto"
+      })
 
-      var form = document.getElementById('payment-form');
+      form.addEventListener('submit', function(event) {
 
-      form.addEventListener('submit', function(ev) {
-        Toast.show("Processando pagamento ...", ".toast-payment")
+        if(form.name.value.length == 0){
+          Toast.show("Preencha seu nome", "toast-payment", 2500, 'center')
+        }else{
+          const ownerInfo = {
+            owner: {
+              name: form.name.value,
+            },
+            metadata: {
+              customerKey: GetKeyCustomer,
+              restaurantKey: KeyRestaurant
+            },
+          };
 
-        ev.preventDefault();
-        // If the client secret was rendered server-side as a data-secret attribute
-        // on the <form> element, you can retrieve it here by calling `form.dataset.secret`
-        stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: card,
-            billing_details: {
-              name: 'André Luis - Chimbras Pub',
+          stripe.createSource(card, ownerInfo).then(function(result) {
+            if (result.error) {
+              Toast.show(result.error.message, "toast-payment", 2500, 'center')
+            } else {
+              stripeSourceHandler(result.source)
             }
-          }
-        }).then(function(result) {
-          console.log(result)
-          if (result.error) {
-            Toast.close(".toast-payment")
-            Toast.show(result.error.message, ".toast-payment")
-          } else {
-            // The payment has been processed!
-            if (result.paymentIntent.status === 'succeeded') {
-              Toast.close(".toast-payment")
-              Toast.show("Pagamento concluído", ".toast-payment")
+          });
+        }
+        event.preventDefault();
+      })
+
+      function stripeSourceHandler(source) {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeSource');
+        hiddenInput.setAttribute('value', source.id);
+        form.appendChild(hiddenInput);
+
+        fetch("/Pay",{
+          method: 'POST',
+          body: new URLSearchParams({
+            customerName: form.name.value,
+            restaurant: KeyRestaurant,
+            sourceID: source.id,
+            customerKey: GetKeyCustomer
+          })
+        })
+        .then(res => res.json())
+          .then(result => {
+            if(result.status == "success"){
+              alert("Sucesso")
             }
-          }
-        });
-      });
-    })
+          })
+      }
 }
 
 const Toast = {
-  show: function(Text, Element, Timeout){
+  show: function(Text, Element, Timeout, Position){
     const T = app.toast.create({
       text: Text,
       cssClass: Element,
+      position: Position,
       closeTimeout: Timeout
     })
 
