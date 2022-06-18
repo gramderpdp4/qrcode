@@ -283,7 +283,14 @@ app.post("/Pay", async (req, res) => {
     const customerName = req.body.customerName,
     customerKey = req.body.customerKey,
     sourceID = req.body.sourceID,
+    keyTable = req.body.keyTable,
+    paymentType = req.body.paymentType,
+    PricePay = Number(req.body.price),
     restaurant = req.body.restaurant;
+
+    const PriceDecimals = PricePay.toFixed(2),
+    FormattedPrice = PriceDecimals.toString().replace(".", "");
+
     stripe.customers.create({
         name: customerName,
         source: sourceID,
@@ -295,16 +302,85 @@ app.post("/Pay", async (req, res) => {
     })
     .then(success => {
         stripe.paymentIntents.create({
-            amount: 2000,
+            amount: FormattedPrice,
             currency: 'brl',
             customer: success.id,
             confirm: true,
             source: success.default_source
         })
         .then(paymentSuccesss => {
-            res.send({
-                status: 'success'
-            })
+            console.log(paymentSuccesss)
+            if(paymentType == "OnlyMyItens"){
+
+                const OnlyItensPayment = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/").orderByChild("customer_key").equalTo(customerKey);
+                const CustomerSave = db.ref("/restaurants/" + restaurant + "/orders/");
+                const TimeStamp = new Date().getTime();
+                const MomentOrder = moment().tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm:ss");
+
+                let array_save_order_customer = {
+                    nameCustomer: customerName,
+                    created_at: MomentOrder,
+                    keyCustomer: customerKey,
+                    source: paymentSuccesss.source,
+                    customer: paymentSuccesss.customer,
+                    paymentIntent: paymentSuccesss.id,
+                    amountReceived: paymentSuccesss.amount_received,
+                    clientSecretStripe: paymentSuccesss.client_secret,
+                    keyTable: keyTable,
+                    status: paymentSuccesss.status,
+                    timestamp: TimeStamp,
+                    restaurant: restaurant,
+                    pricePay: PricePay,
+                    paymentType: paymentType
+                }
+
+                CustomerSave.push(array_save_order_customer)
+                    .then((SaveOrderCustomer) => {
+
+                        res.send({
+                            status: 'success'
+                        })
+
+                        console.log("Success")
+
+                        OnlyItensPayment.once("value", (DataItens) => {
+                            const OnlyItens = DataItens.val(),
+                            OnlyKeys = Object.keys(OnlyItens);
+
+                            const SaveItensOrder = db.ref("/restaurants/" + restaurant + "/orders/" + SaveOrderCustomer.key + "/itens/");
+
+                            OnlyKeys.forEach(OnlyKey => {
+
+                                let array_save_item = {
+                                    name: OnlyItens[OnlyKey].name,
+                                    quantity: OnlyItens[OnlyKey].quantity,
+                                    price: OnlyItens[OnlyKey].price,
+                                    share: OnlyItens[OnlyKey].share,
+                                    customerKey: OnlyItens[OnlyKey].customer_key,
+                                    customerName: OnlyItens[OnlyKey].customer_name,
+                                    itemKey: OnlyItens[OnlyKey].key_item
+                                }
+
+                                SaveItensOrder.push(array_save_item)
+                                    .then(() => {
+                                        console.log("Itens de pedido salvos")
+                                    })
+                                    .catch(() => {
+                                        console.log("Houve um error ao salvar itens do pedido")
+                                    })
+                                    
+                            })
+                        })
+
+                    })
+                    .catch((ErrorOrderCustomer) => {
+
+                    })
+
+            }else{
+
+            }
+
         })
         .catch(paymentError => {
             res.send({
@@ -315,7 +391,6 @@ app.post("/Pay", async (req, res) => {
     .catch(error => {
         console.log(error)
     })
-
 })
 //PAGAMENTO
 

@@ -1,4 +1,4 @@
-<div class="page" data-name="payment" data-url="/payment" data-browser-history="true">
+<div class="page page-payment-finished" data-name="payment" data-url="/payment" data-browser-history="true">
     <div class="navbar" style="height: 7vh;">
         <div class="navbar-bg" style="background-color: #212121; color: white;"></div>
         <div class="navbar-inner sliding">
@@ -14,8 +14,8 @@
       </div>
     <div class="page-content" style="padding-top: 0;">
       <div class="container__style">
-        <div class="block" style="padding-top: 4rem; background-color: #303030;">
-          <div class="list accordion-list">
+        <div class="block block-finished-payment" style="padding-top: 4rem; background-color: #303030;">
+          <div class="list accordion-list" style="margin: 0px">
             <ul>
               <li class="accordion-item"><a class="item-content item-link" href="#">
                   <div class="item-inner">
@@ -47,7 +47,7 @@
                         <!-- We'll put the error messages in this element -->
                         <div id="card-errors" role="alert"></div>
                       
-                        <input type="submit" id="submit" class="button button-fill" style="margin-top: 2rem; margin-bottom: 1rem" value="Finalizar pagamento"/>
+                        <input type="submit" id="submit" class="button button-fill" style="margin-top: 2rem; margin-bottom: 1rem; background-color: var(--p1-bg-color-principal); color: black; font-weight: bold;" value="Finalizar pagamento"/>
                       </form>
                   </div>
                 </div>
@@ -65,8 +65,17 @@
                 </div>
               </li>
             </ul>
-          </div><!-- Separate collapsibles - omit "accordion-list" class-->
+          </div>
         </div>
+        <p style="text-align: center;
+        position: absolute;
+        top: 82%;
+        width: 100%;">
+          <span class="material-symbols-outlined" style="position: relative; top: 0.4rem">
+          verified_user
+          </span>
+          <b>Seu pagamento é seguro</b>
+        </p>
       </div>
   </div>
 </div>

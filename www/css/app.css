@@ -1,6 +1,7 @@
 :root{
   --p1-bg-color-primary: #f9ca24;
   --p1-bg-color-secundary: #2E2E2E;
+  --p1-buttons-weight: bold;
   --p1-bg-color-principal: var(--p1-bg-color-primary);
   --p1-duration-animation-menu: .7s;
   --p1-medium-text: 1.4rem;
@@ -1628,4 +1629,17 @@ h6{
 
 #payment-form input{
   color: white;
+}
+
+.payment-price{
+    position: fixed;
+    background-color: #d63031;
+    border-radius: 6px;
+    color: rgb(255, 255, 255);
+    bottom: 1rem;
+    width: 92%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
 }

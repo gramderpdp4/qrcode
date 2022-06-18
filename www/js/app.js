@@ -1102,6 +1102,7 @@ async function InitializePayment(){
         PaymentEnd.classList.add("col", "button", "button-fill")
         PaymentEnd.innerText = "Continuar consumindo e pagar no final"
         PaymentEnd.style.margin = "1rem"
+        PaymentEnd.style.fontWeight = "var(--p1-buttons-weight)"
         PaymentEnd.style.color = "#000000"
         PaymentEnd.style.backgroundColor = "var(--p1-bg-color-principal)"
         PaymentEnd.style.textTransform = "initial"
@@ -1110,6 +1111,7 @@ async function InitializePayment(){
 
       PaymentMoment.setAttribute("onclick", "PayNow()")
       PaymentMoment.style.margin = "1rem"
+      PaymentMoment.style.fontWeight = "var(--p1-buttons-weight)"
       PaymentMoment.style.backgroundColor = "var(--p1-bg-color-principal)"
       PaymentMoment.style.textTransform = "initial"
       PaymentMoment.style.color = "#000000"
@@ -1284,14 +1286,42 @@ function PaymentAllItens(ItensNoShare){
       })
 
       if(AllPrice > 1){
-        AppendStripe(AllPrice)
+        AppendStripe(AllPrice, 'PayAllItens')
       }
 
     }
   })
 }
 
-function AppendStripe(Price){
+function PaymentMyItens(){
+  const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/").orderByChild("customer_key").equalTo(GetKeyCustomer);
+
+  ItemsCart.once("value", (data) => {
+    if(data.exists()){
+      const Itens = data.val(),
+      Keys = Object.keys(Itens);
+  
+      let AllPrice = 0,
+      AllQuantity;
+  
+        Keys.forEach( async (Key, Indice) => {
+          const price = Itens[Key].price,
+          quantity = Itens[Key].quantity;
+
+          if(quantity != undefined || quantity != null && price != undefined || price != null){
+            AllPrice += parseFloat(price) * Number(quantity)
+          }
+        })
+
+        if(AllPrice > 1){
+          AppendStripe(AllPrice, 'OnlyMyItens')
+        }
+    }
+  })
+
+}
+
+function AppendStripe(Price, PaymentType){
   const Stripe = document.createElement("script");
   Stripe.src = "https://js.stripe.com/v3/"
 
@@ -1299,13 +1329,20 @@ function AppendStripe(Price){
 
   app.popup.close(".popup")
 
-  app.view.main.router.navigate("/finished-payment/price/"+Price+"/")
+  app.view.main.router.navigate("/finished-payment/price/"+Price+"/paymentType/"+PaymentType+"/")
 }
 
-function KeyStripe(Price){
+function KeyStripe(Price, PaymentType){
   const stripe = Stripe("pk_test_51L8AeeKFCvGWaMbo23KgKGAyiKbLMg0kflFDCVFThFoSkm6X3m95DSWVRW7KFuvd9mUfqLrVS4PwZKtm5AXRSrdm00NNbQNrhP");
   const form = document.querySelector('#payment-form');
-  const submit = form.querySelector("#submit");
+  const submit = form.querySelector("#submit"),
+  containerPrice = document.querySelector(".block-finished-payment");
+
+  const ElementPrice = document.createElement("div");
+  ElementPrice.classList.add("payment-price")
+
+  ElementPrice.innerHTML = `Total do pagamento <b>R$${Price}</b>`
+  containerPrice.insertAdjacentElement("afterbegin", ElementPrice)
 
   form.style.pointerEvents = "none"
 
@@ -1340,8 +1377,14 @@ function KeyStripe(Price){
 
       form.addEventListener('submit', function(event) {
 
+        Preloader.show('.page-payment-finished .page-content', 'blue')
+
+        OpacityPayment(true)
+
         if(form.name.value.length == 0){
-          Toast.show("Preencha seu nome", "toast-payment", 2500, 'center')
+          Toast.show("Preencha seu nome", "toast-payment", 2000, 'center')
+          Preloader.close('.page-payment-finished .page-content')
+          OpacityPayment(false)
         }else{
           const ownerInfo = {
             owner: {
@@ -1356,6 +1399,8 @@ function KeyStripe(Price){
           stripe.createSource(card, ownerInfo).then(function(result) {
             if (result.error) {
               Toast.show(result.error.message, "toast-payment", 2500, 'center')
+              Preloader.close('.page-payment-finished .page-content')
+              OpacityPayment(false)
             } else {
               stripeSourceHandler(result.source)
             }
@@ -1377,14 +1422,23 @@ function KeyStripe(Price){
             customerName: form.name.value,
             restaurant: KeyRestaurant,
             sourceID: source.id,
+            paymentType: PaymentType,
+            price: Price,
+            keyTable: KeyTable,
             customerKey: GetKeyCustomer
           })
         })
         .then(res => res.json())
           .then(result => {
             if(result.status == "success"){
-              alert("Sucesso")
+              const view = app.views.current;
+              view.router.back(view.history[0],{force:true});
+
             }
+          })
+          .finally(() => {
+            Preloader.close('.page-payment-finished .page-content')
+            OpacityPayment(false)
           })
       }
 }
@@ -1421,6 +1475,21 @@ const Preloader = {
     const ElementPointerEvents = document.querySelector(Element);
 
     ElementPointerEvents.style.pointerEvents = "auto"
+  }
+}
+
+const OpacityPayment = (Status) => {
+  const Element = $(".page-payment-finished .container__style, #payment-form");
+  if(Status == true){
+    Element.css({
+      opacity: 0.5,
+      "pointerEvents": "none"
+    })
+  }else{
+    Element.css({
+      opacity: 1,
+      pointerEvents: "auto"
+    })
   }
 }
 

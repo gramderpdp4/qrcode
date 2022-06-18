@@ -725,16 +725,18 @@ var routes = [
     }
   },
   {
-    path: '/finished-payment/price/:price/',
+    path: '/finished-payment/price/:price/paymentType/:paymentType/',
     transition: 'f7-cover',
     async: function ({ router, to, resolve }) {
       // App instance
       var app = router.app;
 
-      var Price = to.params.Price;
+      var Price = to.params.Price,
+      paymentType = to.params.paymentType;
 
         var details = {
-          Price: Price
+          Price: Price,
+          paymentType: paymentType
         };
         resolve(
           {
@@ -749,9 +751,10 @@ var routes = [
     },
     on: {
       pageAfterIn: function(e){
-        const Price = e.detail.route.params.price
+        const Price = e.detail.route.params.price,
+        PaymentType = e.detail.route.params.paymentType;
 
-        KeyStripe(Price)
+        KeyStripe(Price, PaymentType)
       }
     }
   },
