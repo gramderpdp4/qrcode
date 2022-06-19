@@ -404,6 +404,7 @@ async function CreateMenuFood(Array_tabs_keys, KeyRestaurant){
           
           ElementScroll.addEventListener("scroll", (e) => {
             TouchMove(e, ElementScroll, ElementNavbar, SubnavbarHome, ElementNavbarParent)
+            console.log("Move")
           })
 
         })
@@ -1172,6 +1173,8 @@ function PayNow(){
         }
 
       })
+    }else{
+      PaymentMyItens()
     }
   }, 400);
 }
@@ -1352,12 +1355,13 @@ function KeyStripe(Price, PaymentType){
   const stripe = Stripe("pk_test_51L8AeeKFCvGWaMbo23KgKGAyiKbLMg0kflFDCVFThFoSkm6X3m95DSWVRW7KFuvd9mUfqLrVS4PwZKtm5AXRSrdm00NNbQNrhP");
   const form = document.querySelector('#payment-form');
   const submit = form.querySelector("#submit"),
+  PriceFormatNumber = Number(Price),
   containerPrice = document.querySelector(".block-finished-payment");
 
   const ElementPrice = document.createElement("div");
   ElementPrice.classList.add("payment-price")
 
-  ElementPrice.innerHTML = `Total do pagamento <b>R$${Price}</b>`
+  ElementPrice.innerHTML = `Total do pagamento <b>R$${PriceFormatNumber.toFixed(2)}</b>`
   containerPrice.insertAdjacentElement("afterbegin", ElementPrice)
 
   form.style.pointerEvents = "none"

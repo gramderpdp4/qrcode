@@ -6,11 +6,11 @@ function TouchMove(Event, Element, Navbar, Subnavbar, NavbarParent){
 
   if(Element.scrollTop > 15){
 
-    if(!Subnavbar.classList.contains("animation-scrolled-hidden")){
+    if(!Subnavbar.classList.contains("animation-scrolled-hidden-subnavar")){
         Subnavbar.classList.remove("animation-scrolled-hidden-s")
         $(".navbar-home").removeClass("animation-scrolled-hidden-s")
         Navbar.classList.remove("animation-scrolled-hidden-s")
-        Subnavbar.classList.add("animation-scrolled-hidden")
+        Subnavbar.classList.add("animation-scrolled-hidden-subnavar")
         ElementTxt.style.display = "none"
         $(".navbar-home").addClass("animation-scrolled-hidden")
         Navbar.classList.add("animation-scrolled-hidden")
@@ -21,9 +21,9 @@ function TouchMove(Event, Element, Navbar, Subnavbar, NavbarParent){
     }
   }else{
 
-    if(Subnavbar.classList.contains("animation-scrolled-hidden")){
+    if(Subnavbar.classList.contains("animation-scrolled-hidden-subnavar")){
 
-        Subnavbar.classList.remove("animation-scrolled-hidden")
+        Subnavbar.classList.remove("animation-scrolled-hidden-subnavar")
         ElementTxt.style.display = "block"
         $(".navbar-home").removeClass("animation-scrolled-hidden")
         Navbar.classList.remove("animation-scrolled-hidden")

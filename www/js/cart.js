@@ -3,6 +3,7 @@ function CartItensEvents(){
     const RefCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/");
     
     RefCart.on("child_changed", (data) => {
+        console.log("Changed")
         ReturnCartItens()
     })
 
@@ -424,7 +425,7 @@ function UpdatePriceCartItem(KeyItem, Name, This){
 }
 
 function DeleteItemCart(KeyItem, Name){
-
+    console.log("Delete")
     const Table = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/" + KeyItem);
 
     const DialogRemoveItem = app.dialog.create({

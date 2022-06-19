@@ -23,7 +23,6 @@ var routes = [
             backdrop: false,
             on: {
               search(sb, query, previousQuery) {
-
                 const ContainerAllItens = document.querySelector(".list-itens-search");
   
                 if(query.length == 0){
@@ -100,6 +99,13 @@ var routes = [
                   })
   
                 }
+              },
+              enable: function(){
+                const ButtonReturn = $(".searchbar-disable-button");
+
+                ButtonReturn.click(function(){
+                  app.view.main.router.back()
+                })
               }
             }
           });
