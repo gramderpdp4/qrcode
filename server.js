@@ -278,7 +278,7 @@ app.post("/LoginUser", async (req, res) => {
 
 //LOGA CLIENTE
 
-//PAGAMENTO
+//PAGAMENTO CARTÃO DE CRÉDITO
 app.post("/Pay", async (req, res) => {
     const customerName = req.body.customerName,
     customerKey = req.body.customerKey,
@@ -452,7 +452,248 @@ app.post("/Pay", async (req, res) => {
         console.log(error)
     })
 })
-//PAGAMENTO
+//PAGAMENTO CARTÃO DE CRÉDITO 
+
+//PAGAR AO FINAL
+app.post("/PaymentTheEnd", async (req, res) => {
+    const restaurant = req.body.restaurant,
+    payTheEnd = req.body.payTheEnd,
+    keyTable = req.body.keyTable,
+    customerKey = req.body.customerKey
+
+    if(restaurant != undefined && restaurant != null && payTheEnd != undefined && payTheEnd != null && keyTable != undefined && keyTable != null && customerKey != undefined && customerKey != null){
+        if(payTheEnd == true || payTheEnd == "true"){
+
+            const UserCartShare = db.ref("/restaurants/" + restaurant + "/customers/" + customerKey),
+            CustomerSave = db.ref("/restaurants/" + restaurant + "/orders/"),
+            TimeStamp = new Date().getTime(),
+            MomentOrder = moment().tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm:ss");
+
+            UserCartShare.once("value", (User) => {
+                if(User.exists()){
+
+                   const ShareCart = User.val().shareCart,
+                   CustomerName = User.val().name,
+                   CustomerSecretCode = User.val().secret_code;
+                    
+                   if(ShareCart == true || ShareCart == "true"){
+
+                    const ItensCart = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/");
+
+                    ItensCart.once("value", (ItensCartData) => {
+                        if(ItensCartData.exists()){
+                            const ItensShare = ItensCartData.val(),
+                            ItensKeys = Object.keys(ItensShare);
+
+                            let CalculatedAllPrice = 0;
+
+                            ItensKeys.forEach(ItemKey => {
+                                const ShareItem = ItensShare[ItemKey].share,
+                                ItemName = ItensShare[ItemKey].name,
+                                ItemPrice = ItensShare[ItemKey].price,
+                                ItemQuantity = ItensShare[ItemKey].quantity;
+
+                                if(ShareItem == true || ShareItem == "true"){
+                                    CalculatedAllPrice += parseFloat(ItemPrice) * Number(ItemQuantity)
+                                }
+                            })
+
+                           const FormattedPriceToFixed = CalculatedAllPrice.toFixed(2);
+
+                           if(FormattedPriceToFixed > 0){
+
+                                let array_save_order_customer = {
+                                    nameCustomer: CustomerName,
+                                    created_at: MomentOrder,
+                                    keyCustomer: customerKey,
+                                    keyTable: keyTable,
+                                    timestamp: TimeStamp,
+                                    customerSecretCode: CustomerSecretCode,
+                                    shareCart: ShareCart,
+                                    restaurant: restaurant,
+                                    pricePay: FormattedPriceToFixed,
+                                    paymentType: 'payTheEnd'
+                                }
+
+                                CustomerSave.push(array_save_order_customer)
+                                    .then((successSaveOrder) => {
+
+                                        res.send({
+                                            status: 1,
+                                            message: 'Pedido enviado'
+                                        })
+
+                                        ItensCart.once("value", (DataAllItens) => {
+                                            const AllItens = DataAllItens.val(),
+                                            Allkeys = Object.keys(AllItens);
+                
+                                            const SaveItensOrder = db.ref("/restaurants/" + restaurant + "/orders/" + successSaveOrder.key + "/itens/");
+                
+                                            Allkeys.forEach(AllKey => {
+                                                const ItemShare = AllItens[AllKey].share,
+                                                ItemCustomerKey = AllItens[AllKey].customer_key;
+                                                if(ItemShare == true || ItemShare == "true" || customerKey == ItemCustomerKey){
+                                                    let array_save_item = {
+                                                        name: AllItens[AllKey].name,
+                                                        quantity: AllItens[AllKey].quantity,
+                                                        price: AllItens[AllKey].price,
+                                                        share: AllItens[AllKey].share,
+                                                        customerKey: AllItens[AllKey].customer_key,
+                                                        customerName: AllItens[AllKey].customer_name,
+                                                        itemKey: AllItens[AllKey].key_item
+                                                    }
+                    
+                                                    SaveItensOrder.push(array_save_item)
+                                                        .then(() => {
+                    
+                                                            const RemoveAllItem = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/" + AllKey);
+                    
+                                                            RemoveAllItem.remove()
+                                                                .then(() => {
+                                                                    console.log("Item Saved and Removed", AllItens[AllKey].name)
+                                                                })
+                                                                .catch(() => {
+                                                                    console.log("Erro saved and removed")
+                                                                })
+                    
+                    
+                                                        })
+                                                        .catch(() => {
+                                                            console.log("Houve um error ao salvar itens do pedido")
+                                                        })
+                                                }   
+                                            })
+                                        })
+
+                                    })
+                                    .catch(() => {
+
+                                    })
+
+                           }
+                        }else{
+                            res.send({
+                                codeError: 12,
+                                message: 'Nenhum item encontrado nessa mesa'
+                            })
+                        }
+                    })
+
+                    //CART NO SHARE
+                   }else{
+                    const ItensCartNoShare = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/").orderByChild("customer_key").equalTo(customerKey);
+
+                    ItensCartNoShare.once("value", (DataItensNoShare) => {
+                        if(DataItensNoShare.exists){
+
+                            const ItensNoShare = DataItensNoShare.val(),
+                            ItensKeys = Object.keys(ItensNoShare);
+
+                            let CalculatedAllPrice = 0;
+
+                            ItensKeys.forEach(ItemKey => {
+                                const ItemPrice = ItensNoShare[ItemKey].price,
+                                ItemQuantity = ItensNoShare[ItemKey].quantity;
+
+                                CalculatedAllPrice += parseFloat(ItemPrice) * Number(ItemQuantity)
+
+                            })
+
+                            const FormattedPriceToFixed = CalculatedAllPrice.toFixed(2);
+
+                            if(FormattedPriceToFixed > 0){
+
+                                let array_save_order_customer = {
+                                    nameCustomer: CustomerName,
+                                    created_at: MomentOrder,
+                                    keyCustomer: customerKey,
+                                    keyTable: keyTable,
+                                    timestamp: TimeStamp,
+                                    customerSecretCode: CustomerSecretCode,
+                                    shareCart: ShareCart,
+                                    restaurant: restaurant,
+                                    pricePay: FormattedPriceToFixed,
+                                    paymentType: 'payTheEnd'
+                                }
+
+                                CustomerSave.push(array_save_order_customer)
+                                    .then((successSaveOrder) => {
+
+                                        res.send({
+                                            status: 1,
+                                            message: 'Pedido enviado'
+                                        })
+                                   
+                                        const SaveItensOrder = db.ref("/restaurants/" + restaurant + "/orders/" + successSaveOrder.key + "/itens/");
+
+                                        ItensKeys.forEach(ItemKey => {
+                                            const ShareItem = ItensNoShare[ItemKey].share,
+                                            ItemName = ItensNoShare[ItemKey].name,
+                                            ItemPrice = ItensNoShare[ItemKey].price,
+                                            ItemQuantity = ItensNoShare[ItemKey].quantity,
+                                            CustomerName = ItensNoShare[ItemKey].customer_name,
+                                            CustomerItemKey = ItensNoShare[ItemKey].customer_key;
+            
+                                            let array_save_item = {
+                                                name: ItemName,
+                                                quantity: ItemQuantity,
+                                                price: ItemPrice,
+                                                share: ShareItem,
+                                                customerKey: CustomerItemKey,
+                                                customerName: CustomerName,
+                                                itemKey: ItemKey
+                                            }
+
+                                            SaveItensOrder.push(array_save_item)
+                                                .then(() => {
+
+                                                    const RemoveAllItem = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/" + ItemKey);
+                    
+                                                    RemoveAllItem.remove()
+                                                    .then(() => {
+                                                        console.log("Item Saved and Removed", ItemName)
+                                                    })
+                                                    .catch(() => {
+                                                        console.log("Erro saved and removed")
+                                                    })                              
+
+                                                })
+                                                .catch(() => {
+
+                                                })
+
+                                        })
+
+                                    })
+                                    .catch(() => {
+
+                                    })
+
+                            }
+
+                        }else{
+
+                            req.send({
+                                codeError: 10,
+                                message: "Nenhum item encontrado para esse usuário nessa mesa.",
+                                status: 2
+                            })
+
+                        }
+                    })
+
+                   }
+
+                }else{
+
+                    
+                }
+            })
+
+        }
+    }
+})
+//PAGAR AO FINAL
 
 
 app.listen(port, () => {

@@ -1132,7 +1132,53 @@ async function InitializePayment(){
 
 
 function PaymentEnd(){
-  alert("End")
+  const Dialog = app.dialog.create({
+    title: 'Pagar apenas no final',
+    cssClass: 'dialog-pay-the-end',
+    text: 'Sua conta fica acumulando, você será cobrado apenas no final. Confirme para finalizar o pedido',
+    buttons: [
+      {
+        text: 'Cancelar',
+      },
+      {
+        text: 'Confirmar',
+        onClick: function(){
+          FinishPaymentTheEnd()
+        }
+      }
+    ]
+  });
+
+  Dialog.open()
+}
+
+function FinishPaymentTheEnd(){
+  Preloader.show('.page-current .page-content', 'blue')
+
+  OpacityPayment(true)
+
+  fetch("/PaymentTheEnd", {
+    method: 'POST',
+    body: new URLSearchParams({
+      restaurant: KeyRestaurant,
+      keyTable: KeyTable,
+      payTheEnd: true,
+      customerKey: GetKeyCustomer
+    })
+  })
+  .then(res => res.json())
+    .then(result => {
+      if(result.status == 1){
+        const view = app.views.current;
+        view.router.back(view.history[0],{force:true});
+        PopupSuccessPayment()
+      }else{
+        alert(result.message)
+      } 
+    })
+    .finally(() => {
+      OpacityPayment(false)
+    })
 }
 
 function PayNow(){
@@ -1504,7 +1550,7 @@ const Preloader = {
 }
 
 const OpacityPayment = (Status) => {
-  const Element = $(".page-payment-finished .container__style, #payment-form");
+  const Element = $(".page-current .container__style, #payment-form");
   if(Status == true){
     Element.css({
       opacity: 0.5,

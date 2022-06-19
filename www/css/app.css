@@ -1332,3 +1332,12 @@ h6{
 .page-item .container-item img{
   height: 100%;
 }
+
+.dialog-pay-the-end .dialog-button{
+  color: var(--p1-bg-color-principal);
+  font-weight: var(--p1-buttons-weight);
+}
+
+.dialog-pay-the-end .dialog-text, .dialog-pay-the-end .dialog-title{
+  font-weight: var(--p1-buttons-weight);
+}
