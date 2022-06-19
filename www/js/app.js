@@ -679,8 +679,7 @@ let DirectionItensSearch = 0;
 
 function ItensSearch(){
 
-  const ContainerSearch = document.querySelector(".container-search-itens"),
-  ContainerItensSearch = document.querySelector(".list-itens-search");
+      const ContainerItensSearch = document.querySelector(".list-itens-search");
 
       const MenuFood = db.ref("/restaurants/" + KeyRestaurant + "/categories/");
 
@@ -775,7 +774,9 @@ function ItensSearch(){
                     CalculatorStart(CalculatedPercent, Row, CountCustomersStars, 1)
                     ElementCountStars = parseInt(CalculatedPercent)
                   }
-                }        
+                }   
+
+                console.log(name, ElementCountStars)
 
                 if(ElementCountStars > 59){
                   if(MaxElementsStars <= 5){
@@ -783,12 +784,14 @@ function ItensSearch(){
                     ContainerItensSearch.appendChild(Li)
 
                     MaxElementsStars++
+                  }else{
+                    Li.classList.add("no-stars", "hidden-by-searchbar")
+                    ContainerItensSearch.appendChild(Li)
                   }
                 }else{
                   Li.classList.add("no-stars", "hidden-by-searchbar")
                   ContainerItensSearch.appendChild(Li)
                 }
-
               })
             }
           })
@@ -808,23 +811,25 @@ function ItensSearch(){
 }
 
 function CalculatorStart(CalculatedPercent, Container, CountCustomers, NumberIdenti){
-  if(CalculatedPercent <= 20){
+  const FormattedCalculatedStars = parseInt(CalculatedPercent);
+
+  if(FormattedCalculatedStars <= 20){
 
     AddStars(1, Container, CountCustomers, NumberIdenti)                    
 
-  }else if(CalculatedPercent >= 21 && CalculatedPercent <= 40){
+  }else if(FormattedCalculatedStars >= 21 && FormattedCalculatedStars <= 40){
 
     AddStars(2, Container, CountCustomers, NumberIdenti)  
 
-  }else if(CalculatedPercent >= 41 && CalculatedPercent <= 60){
+  }else if(FormattedCalculatedStars >= 41 && FormattedCalculatedStars <= 60){
 
     AddStars(3, Container, CountCustomers, NumberIdenti)  
     
-  }else if(CalculatedPercent >= 61 && CalculatedPercent <= 80){
+  }else if(FormattedCalculatedStars >= 61 && FormattedCalculatedStars <= 80){
 
     AddStars(4, Container, CountCustomers, NumberIdenti)  
 
-  }else if(CalculatedPercent >= 81 && CalculatedPercent <= 100){
+  }else if(FormattedCalculatedStars >= 81 && FormattedCalculatedStars <= 100){
 
     AddStars(5, Container, CountCustomers, NumberIdenti)  
 

@@ -5,10 +5,6 @@ var routes = [
     url: './index.html'
   },
   {
-    path: '/about/',
-    url: './pages/about.html',
-  },
-  {
     path: '/searchpage/',
     url: './pages/page-search-container.html',
     on: {
@@ -203,28 +199,6 @@ var routes = [
         }
  
     }
-  },
-  {
-    path: '/account/',
-    url: './pages/my-account.html',
-    on: {
-      pageInit: function(){
-        let $name_user_acc = sessionStorage.getItem("user_name_login"),
-            $container_name_text = document.getElementById("name_user_acc");
-
-            $container_name_text.innerText = $name_user_acc
-      }
-    }
-  },
-  {
-    path: '/changedMesa/',
-    url: './pages/changed-chair.html',
-    on: {
-      pageInit: function(){
-        app.popover.close(".popover")
-        returnChairsLength()
-      }
-    } 
   },
   {
     path: '/comments/key/:key/keycategory/:keycategory/',
@@ -451,50 +425,8 @@ var routes = [
     }
   },
   {
-    path: '/metod/',
-    url: './pages/metod-payment.html',
-    on: {
-      pageInit: function(){
-        VerifiShareCart()
-      },
-      pageBeforeOut: function(){
-        let $ref_delete_payment_pending = databases.ref("/paymentPending/")
-        .orderByChild("keyUserPayment")
-        .equalTo($user_key_global)
-
-        $ref_delete_payment_pending.once("value", sm , nm)
-
-        function sm(data) {
-         let $items = data.val(),
-             $keys = Object.keys($items)
-
-             for(let i = 0; i < $keys.length; i++){
-               let $key = $keys[i];
-
-               let $remove_pending = databases.ref("/paymentPending/" + $key)
-
-               $remove_pending.remove()
-             }
-        }
-
-        function nm(err) {
-          
-        }
-      }
-    }
-  },
-  {
     path: '/finished/',
     url: './pages/finished.html'
-  },
-  {
-    path: '/notificacoes/',
-    componentUrl: './pages/notificacoes.html',
-    on: {
-      pageInit: function(){
-        returnMessages()
-      }
-    }
   },
   {
     path: '/user-page/',
@@ -553,56 +485,6 @@ var routes = [
       url: './pages/sheet-cupom-active.html',
 
     }
-  },
-  {
-    path: '/form/',
-    url: './pages/form.html',
-  },
-  {
-    path: '/itemPage/nome/:nome/description/:description/image/:image/price/:price/key/:key',
-    async: function ({ router, to, resolve }) {
-      var app = router.app;
-
-      var nome = to.params.nome,
-      description = to.params.description,
-      image = to.params.image,
-      key = to.params.key,
-      price = to.params.price;
-        var user = {
-          description: description,
-          nome: nome,
-          key: key,
-          price: price,
-          image: image,
-          firstName: 'Vladimir',
-          lastName: 'Kharlampidi',
-          about: 'Hello, i am creator of Framework7! Hope you like it!',
-          links: [
-            {
-              title: 'Framework7 Website',
-              url: 'http://framework7.io',
-            },
-            {
-              title: 'Framework7 Forum',
-              url: 'http://forum.framework7.io',
-            },
-          ]
-        };
-        // Hide Preloader
-        app.preloader.hide();
-
-        // Resolve route to load page
-        resolve(
-          {
-            componentUrl: './pages/item-page.html',
-          },
-          {
-            props: {
-              user: user,
-            }
-          }
-        );
-    },
   },
   { 
     path: '/right-panel-ajax/',

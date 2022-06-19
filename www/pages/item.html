@@ -1,5 +1,5 @@
 <template>
-    <div class="page" data-name="item" data-url="/item-page" data-browser-history="true">
+    <div class="page page-item" data-name="item" data-url="/item-page" data-browser-history="true">
         <div class="navbar" style="height: 7vh;">
             <div class="navbar-bg" style="background-color: rgba(0, 0, 0, 0.6);; color: white;"></div>
             <div class="navbar-inner sliding">
@@ -168,6 +168,8 @@
                   AddStars(0, RowStart, 0, 1) 
 
                 }
+
+                ContainerItem.innerHTML = ""
             
                 ContainerItem.appendChild(Img)
                 ContainerItem.appendChild(ContainerBottom)
