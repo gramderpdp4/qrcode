@@ -309,39 +309,37 @@ app.post("/Pay", async (req, res) => {
             source: success.default_source
         })
         .then(paymentSuccesss => {
-            console.log(paymentSuccesss)
+
+            const TimeStamp = new Date().getTime();
+            const MomentOrder = moment().tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm:ss");
+            const CustomerSave = db.ref("/restaurants/" + restaurant + "/orders/");
+
+            let array_save_order_customer = {
+                nameCustomer: customerName,
+                created_at: MomentOrder,
+                keyCustomer: customerKey,
+                source: paymentSuccesss.source,
+                customer: paymentSuccesss.customer,
+                paymentIntent: paymentSuccesss.id,
+                amountReceived: paymentSuccesss.amount_received,
+                clientSecretStripe: paymentSuccesss.client_secret,
+                keyTable: keyTable,
+                status: paymentSuccesss.status,
+                timestamp: TimeStamp,
+                restaurant: restaurant,
+                pricePay: PricePay,
+                paymentType: paymentType
+            }
+
             if(paymentType == "OnlyMyItens"){
 
                 const OnlyItensPayment = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/").orderByChild("customer_key").equalTo(customerKey);
-                const CustomerSave = db.ref("/restaurants/" + restaurant + "/orders/");
-                const TimeStamp = new Date().getTime();
-                const MomentOrder = moment().tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm:ss");
-
-                let array_save_order_customer = {
-                    nameCustomer: customerName,
-                    created_at: MomentOrder,
-                    keyCustomer: customerKey,
-                    source: paymentSuccesss.source,
-                    customer: paymentSuccesss.customer,
-                    paymentIntent: paymentSuccesss.id,
-                    amountReceived: paymentSuccesss.amount_received,
-                    clientSecretStripe: paymentSuccesss.client_secret,
-                    keyTable: keyTable,
-                    status: paymentSuccesss.status,
-                    timestamp: TimeStamp,
-                    restaurant: restaurant,
-                    pricePay: PricePay,
-                    paymentType: paymentType
-                }
-
                 CustomerSave.push(array_save_order_customer)
                     .then((SaveOrderCustomer) => {
 
                         res.send({
                             status: 'success'
                         })
-
-                        console.log("Success")
 
                         OnlyItensPayment.once("value", (DataItens) => {
                             const OnlyItens = DataItens.val(),
@@ -363,7 +361,18 @@ app.post("/Pay", async (req, res) => {
 
                                 SaveItensOrder.push(array_save_item)
                                     .then(() => {
-                                        console.log("Itens de pedido salvos")
+
+                                        const RemoveOnlyItem = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/" + OnlyKey);
+
+                                        RemoveOnlyItem.remove()
+                                            .then(() => {
+                                                console.log("Item Saved and Removed", OnlyItens[OnlyKey].name)
+                                            })
+                                            .catch(() => {
+                                                console.log("Erro saved and removed")
+                                            })
+
+
                                     })
                                     .catch(() => {
                                         console.log("Houve um error ao salvar itens do pedido")
@@ -376,11 +385,62 @@ app.post("/Pay", async (req, res) => {
                     .catch((ErrorOrderCustomer) => {
 
                     })
+            }else if(paymentType == "PayAllItens"){
 
-            }else{
+                const PaymentAllItens = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/");
 
+                CustomerSave.push(array_save_order_customer)
+                    .then((SaveOrderCustomer) => {
+
+                        res.send({
+                            status: 'success'
+                        })
+
+                        PaymentAllItens.once("value", (DataAllItens) => {
+                            const AllItens = DataAllItens.val(),
+                            Allkeys = Object.keys(AllItens);
+
+                            const SaveItensOrder = db.ref("/restaurants/" + restaurant + "/orders/" + SaveOrderCustomer.key + "/itens/");
+
+                            Allkeys.forEach(AllKey => {
+                                const ItemShare = AllItens[AllKey].share;
+                                if(ItemShare == true){
+                                    let array_save_item = {
+                                        name: AllItens[AllKey].name,
+                                        quantity: AllItens[AllKey].quantity,
+                                        price: AllItens[AllKey].price,
+                                        share: AllItens[AllKey].share,
+                                        customerKey: AllItens[AllKey].customer_key,
+                                        customerName: AllItens[AllKey].customer_name,
+                                        itemKey: AllItens[AllKey].key_item
+                                    }
+    
+                                    SaveItensOrder.push(array_save_item)
+                                        .then(() => {
+    
+                                            const RemoveAllItem = db.ref("/restaurants/" + restaurant + "/dice/tables/" + keyTable + "/itens/" + AllKey);
+    
+                                            RemoveAllItem.remove()
+                                                .then(() => {
+                                                    console.log("Item Saved and Removed", AllItens[AllKey].name)
+                                                })
+                                                .catch(() => {
+                                                    console.log("Erro saved and removed")
+                                                })
+    
+    
+                                        })
+                                        .catch(() => {
+                                            console.log("Houve um error ao salvar itens do pedido")
+                                        })
+                                }   
+                            })
+                        })
+                    })
+                    .catch((ErrorOrderCustomer) => {
+
+                    })
             }
-
         })
         .catch(paymentError => {
             res.send({

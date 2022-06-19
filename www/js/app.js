@@ -1272,7 +1272,7 @@ function PaymentAllItens(ItensNoShare){
       })
       
       if(AllPrice > 1){
-        AppendStripe(AllPrice)
+        AppendStripe(AllPrice, 'OnlyMyItens')
       }
     
     }else{
@@ -1295,7 +1295,6 @@ function PaymentAllItens(ItensNoShare){
 
 function PaymentMyItens(){
   const ItemsCart = db.ref("/restaurants/" + KeyRestaurant + "/dice/tables/" + KeyTable + "/itens/").orderByChild("customer_key").equalTo(GetKeyCustomer);
-
   ItemsCart.once("value", (data) => {
     if(data.exists()){
       const Itens = data.val(),
@@ -1312,10 +1311,27 @@ function PaymentMyItens(){
             AllPrice += parseFloat(price) * Number(quantity)
           }
         })
-
         if(AllPrice > 1){
           AppendStripe(AllPrice, 'OnlyMyItens')
         }
+    }else{
+        const Dial = app.dialog.create({
+          title: 'Você não colocou nenhum item no carrinho',
+          text: 'Escolha a opção "Pagar tudo", ou adicione algo ao carrinho.',
+          buttons: [
+            {
+              text: 'Voltar',
+            },
+            {
+              text: 'Pagar tudo',
+              onClick: function(){
+                PaymentAllItens()
+              }
+            }
+          ]
+        });
+
+        Dial.open()
     }
   })
 
@@ -1433,7 +1449,7 @@ function KeyStripe(Price, PaymentType){
             if(result.status == "success"){
               const view = app.views.current;
               view.router.back(view.history[0],{force:true});
-
+              PopupSuccessPayment()
             }
           })
           .finally(() => {
@@ -1493,6 +1509,29 @@ const OpacityPayment = (Status) => {
   }
 }
 
+function PopupSuccessPayment(){
+  InitializePopupSuccessPayment()
+    .then(() => {
+      app.view.main.router.navigate("/payment-success/")
+    })
+    .catch(() => {
+      PopupSuccessPayment()
+    })
+}
+
+function InitializePopupSuccessPayment(){
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Page Is Current?")
+      const PageHomeExistsCurrent = document.querySelector(".page[data-name=home]");
+      if(PageHomeExistsCurrent.classList.contains("page-current")){
+        resolve()
+      }else{
+        reject()
+      }
+    }, 120);
+  })
+}
 
 function ReturnCartItens(){
   const CartShare = db.ref("/restaurants/" + KeyRestaurant + "/customers/" + GetKeyCustomer);

@@ -1638,8 +1638,8 @@ h6{
     color: rgb(255, 255, 255);
     bottom: 1rem;
     width: 92%;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     text-align: center;
     font-size: 1.5rem;
 }
