@@ -8,7 +8,7 @@ function StarsItem(KeyItem, KeyCategory){
         if(data.exists()){
 
             const AllStars = data.val(),
-            KeysStars = Object.keys(AllStars);
+            KeysStars = Object.keys(AllStars).slice(0).reverse();
 
             ContainerStars.innerHTML = ""
 

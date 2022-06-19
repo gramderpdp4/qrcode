@@ -8,7 +8,7 @@ function GetComments(KeyItem){
         if(data.exists()){
 
             const Data = data.val(),
-            Keys = Object.keys(Data);
+            Keys = Object.keys(Data).slice(0).reverse();
 
             ContainerMessages.innerHTML = ""
 

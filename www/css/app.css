@@ -1648,3 +1648,8 @@ h6{
     text-align: center;
     font-size: 1.5rem;
 }
+
+.page-block-stars .message-received .message-bubble{
+  background-color: transparent;
+  padding-left: 0px;
+}
